@@ -5,6 +5,11 @@ use std::{
     io::{self, Read},
 };
 
+use petgraph::{
+    dot::{Config, Dot},
+    prelude::GraphMap,
+    Directed, Graph,
+};
 use types::{Agenda, DataFile, Handicraft, HandicraftPopSupply, RareItemCount, RareItemVariant};
 
 const TIME_IN_CYCLE: usize = 24;
@@ -12,6 +17,8 @@ const TIME_IN_CYCLE: usize = 24;
 fn main() {
     let raw = fs::read_to_string("handicrafts.toml").unwrap();
     let data: DataFile = toml::from_str(&raw).unwrap();
+
+    let handicraft_graph = create_material_graph(&data.handicrafts);
 
     println!("Input amount of rare items in Isleventory");
 
@@ -43,6 +50,17 @@ fn main() {
         .into_iter()
         .map(|item| input_product_pop_supply(&mut stdin, item))
         .collect();
+}
+
+fn create_material_graph(handicrafts: &Vec<Handicraft>) -> GraphMap<&str, &str, Directed> {
+    let relations = handicrafts.iter().flat_map(|item| {
+        item.materials
+            .iter()
+            .map(|mat| (item.name.as_str(), mat.0.as_str()))
+    });
+    let mut graph = GraphMap::new();
+    graph.extend(relations);
+    graph
 }
 
 fn input_rare_item_count(
@@ -93,4 +111,5 @@ fn find_agendas(
         .into_iter()
         .filter(|item| item.count > 0)
         .collect();
+    todo!();
 }
