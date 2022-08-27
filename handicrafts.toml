@@ -1,0 +1,310 @@
+[[handicrafts]]
+name = "Isleworks Potion"
+time = 4
+quantity = 1
+value = 28
+category = ["Concoctions"]
+materials = { "Island Palm Leaf" = 2, "Islewort" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Firesand"
+time = 4
+quantity = 1
+value = 28
+category = ["Concoctions", "Unburied Treasures"]
+materials = { "Island Sand" = 2, "Island Limestone" = 1, "Islewort" = 1 }
+
+[[handicrafts]]
+name = "Isleworks Grilled Clam"
+time = 4
+quantity = 1
+value = 28
+category = ["Foodstuffs", "Marine Merchandise"]
+materials = { "Island Clam" = 2, "Island Laver" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Necklace"
+time = 4
+quantity = 1
+value = 28
+category = ["Accessories", "Woodworks"]
+materials = { "Island Branch" = 3, "Island Vine" = 1 }
+
+[[handicrafts]]
+name = "Isleworks Sauerkraut"
+time = 4
+quantity = 1
+value = 40
+category = ["Preserved Food"]
+materials = { "Island Cabbage" = 1, "Island Rock Salt" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Baked Pumpkin"
+time = 4
+quantity = 1
+value = 40
+category = ["Foodstuffs"]
+materials = { "Island Pumpkin" = 1, "Island Sap" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Culinary Knife"
+time = 4
+quantity = 1
+value = 44
+category = ["Sundries", "Creature Creations"]
+materials = { "Sanctuary Claw" = 1, "Island Palm Log" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Brush"
+time = 4
+quantity = 1
+value = 44
+category = ["Sundries", "Woodworks"]
+materials = { "Sanctuary Fur" = 1, "Island Palm Log" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Boiled Egg"
+time = 4
+quantity = 1
+value = 44
+category = ["Foodstuffs", "Creature Creations"]
+materials = { "Sanctuary Egg" = 1, "Island Laver" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Earrings"
+time = 4
+quantity = 1
+value = 44
+category = ["Accessories", "Creature Creations"]
+materials = { "Sanctuary Fang" = 1, "Island Vine" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Butter"
+time = 4
+quantity = 1
+value = 44
+category = ["Ingredients", "Creature Creations"]
+materials = { "Sanctuary Milk" = 1, "Island Rock Salt" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Parsnip Salad"
+time = 4
+quantity = 1
+value = 48
+category = ["Foodstuffs"]
+materials = { "Island Parsnip" = 2, "Islewort" = 1, "Island Sap" = 1 }
+
+[[handicrafts]]
+name = "Isleworks Rope"
+time = 4
+quantity = 1
+value = 36
+category = ["Sundries", "Textiles"]
+materials = { "Island Hemp" = 2, "Islewort" = 1, "Island Vine" = 1 }
+
+[[handicrafts]]
+name = "Isleworks Wooden Chair"
+time = 6
+quantity = 1
+value = 42
+category = ["Furnishings", "Woodworks"]
+materials = { "Island Log" = 4, "Island Vine" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Coral Ring"
+time = 6
+quantity = 1
+value = 42
+category = ["Accessories", "Marine Merchandise"]
+materials = { "Island Coral" = 3, "Island Vine" = 3 }
+
+[[handicrafts]]
+name = "Island Barbut"
+time = 6
+quantity = 1
+value = 42
+category = ["Attire", "Metalworks"]
+materials = { "Island Copper Ore" = 3, "Island Sand" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Macuahuitl"
+time = 6
+quantity = 1
+value = 42
+category = ["Arms", "Woodworks"]
+materials = { "Island Palm Log" = 3, "Island Stone" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Tunic"
+time = 6
+quantity = 1
+value = 42
+category = ["Attire", "Textiles"]
+materials = { "Sanctuary Fleece" = 2, "Island Vine" = 4 }
+
+[[handicrafts]]
+name = "Isleworks Hora"
+time = 6
+quantity = 1
+value = 72
+category = ["Arms", "Creature Creations"]
+materials = { "Sanctuary Carapace" = 2, "Island Stone" = 4 }
+
+[[handicrafts]]
+name = "Isleworks Brick Counter"
+time = 6
+quantity = 1
+value = 48
+category = ["Furnishings", "Unburied Treasures"]
+materials = { "Island Clay" = 2, "Island Limestone" = 2, "Island Palm Log" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Sweet Popoto"
+time = 6
+quantity = 1
+value = 72
+category = ["Confections"]
+materials = { "Island Popoto" = 2, "Sanctuary Milk" = 1, "Island Sap" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Caramels"
+time = 6
+quantity = 1
+value = 81
+category = ["Confections"]
+materials = { "Island Sugarcane" = 4, "Sanctuary Milk" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Ribbon"
+time = 6
+quantity = 1
+value = 54
+category = ["Accessories", "Textiles"]
+materials = { "Island Cotton Boll" = 2, "Island Copper Ore" = 2, "Island Vine" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Cavalier's Hat"
+time = 6
+quantity = 1
+value = 81
+category = ["Attire", "Textiles"]
+materials = { "Sanctuary Feather" = 2, "Island Cotton Boll" = 2, "Island Hemp" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Horn"
+time = 6
+quantity = 1
+value = 81
+category = ["Sundries", "Creature Creations"]
+materials = { "Sanctuary Horn" = 2, "Island Clay" = 2, "Island Hemp" = 2 }
+
+[[handicrafts]]
+name = "Bronze Sheep"
+time = 8
+quantity = 1
+value = 64
+category = ["Furnishings", "Metalworks"]
+materials = { "Island Tinsand" = 3, "Island Copper Ore" = 3, "Island Log" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Growth Formula"
+time = 8
+quantity = 1
+value = 136
+category = ["Concoctions"]
+materials = { "Island Alyssum" = 2, "Islewort" = 2, "Island Branch" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Garnet Rapier"
+time = 8
+quantity = 1
+value = 136
+category = ["Arms", "Unburied Treasures"]
+materials = { "Raw Island Garnet" = 2, "Island Copper Ore" = 3, "Island Tinsand" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Spruce Round Shield"
+time = 8
+quantity = 1
+value = 136
+category = ["Attire", "Woodworks"]
+materials = { "Island Spruce Log" = 2, "Island Copper Ore" = 3, "Island Stone" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Shark Oil"
+time = 8
+quantity = 1
+value = 136
+category = ["Sundries", "Marine Merchandise"]
+materials = { "Island Hammerhead" = 2, "Island Laver" = 3, "Island Sap" = 3 }
+
+[[handicrafts]]
+name = "Isleworks Silver Ear Cuffs"
+time = 8
+quantity = 1
+value = 136
+category = ["Accessories", "Metalworks"]
+materials = { "Island Silver Ore" = 2, "Island Tinsand" = 3, "Island Coral" = 3 }
+
+
+[[rare.produce]]
+name = "Island Popoto"
+
+[[rare.produce]]
+name = "Island Cabbage"
+
+[[rare.produce]]
+name = "Island Pumpkin"
+
+[[rare.produce]]
+name = "Island Parsnip"
+
+[[rare.produce]]
+name = "Island Cotton Boll"
+
+[[rare.material]]
+name = "Island Alyssum"
+area = "Meandering Meadows"
+
+[[rare.material]]
+name = "Raw Island Garnet"
+area = "Fatal Falls"
+
+[[rare.material]]
+name = "Island Spruce Log"
+area = "Wild Woods"
+
+[[rare.material]]
+name = "Island Hammerhead"
+area = "Bending Beaches"
+
+[[rare.material]]
+name = "Island Silver Ore"
+area = "Mossy Mountains"
+
+[[rare.leavings]]
+name = "Sanctuary Fleece"
+
+[[rare.leavings]]
+name = "Sanctuary Claw"
+
+[[rare.leavings]]
+name = "Sanctuary Carapace"
+
+[[rare.leavings]]
+name = "Sanctuary Fang"
+
+[[rare.leavings]]
+name = "Sanctuary Milk"
+
+[[rare.leavings]]
+name = "Sanctuary Egg"
+
+[[rare.leavings]]
+name = "Sanctuary Fur"
+
+[[rare.leavings]]
+name = "Sanctuary Feather"
+
+[[rare.leavings]]
+name = "Sanctuary Horn"
