@@ -103,6 +103,30 @@ category = ["Sundries", "Textiles"]
 materials = { "Island Hemp" = 2, "Islewort" = 1, "Island Vine" = 1 }
 
 [[handicrafts]]
+name = "Isleworks Squid Ink"
+time = 4
+quantity = 1
+value = 39
+category = ["Ingredients", "Marine Merchandise"]
+materials = { "Island Squid" = 2, "Island Rock Salt" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Tomato Relish"
+time = 4
+quantity = 1
+value = 57
+category = ["Ingredients"]
+materials = { "Island Tomato" = 2, "Island Sugarcane" = 1, "Islewort" = 1 }
+
+[[handicrafts]]
+name = "Isleworks Corn Flakes"
+time = 4
+quantity = 1
+value = 57
+category = ["Preserved Food"]
+materials = { "Island Corn" = 2, "Island Sugarcane" = 2 }
+
+[[handicrafts]]
 name = "Isleworks Wooden Chair"
 time = 6
 quantity = 1
@@ -199,6 +223,46 @@ category = ["Sundries", "Creature Creations"]
 materials = { "Sanctuary Horn" = 2, "Island Clay" = 2, "Island Hemp" = 2 }
 
 [[handicrafts]]
+name = "Isleworks Salt Cod"
+time = 6
+quantity = 1
+value = 59
+category = ["Preserved Food", "Marine Merchandise"]
+materials = { "Islefish" = 4, "Island Rock Salt" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Essential Draught"
+time = 6
+quantity = 1
+value = 59
+category = ["Concoctions", "Marine Merchandise"]
+materials = { "Island Jellyfish" = 2, "Island Palm Leaf" = 2, "Island Laver" = 2 }
+
+[[handicrafts]]
+name = "Isleberry Jam"
+time = 6
+quantity = 1
+value = 85
+category = ["Ingredients"]
+materials = { "Isleberry" = 3, "Island Sugarcane" = 2, "Island Sap" = 2 }
+
+[[handicrafts]]
+name = "Isleworks Onion Soup"
+time = 6
+quantity = 1
+value = 85
+category = ["Foodstuffs"]
+materials = { "Island Onion" = 3, "Island Rock Salt" = 2, "Islewort" = 1 }
+
+[[handicrafts]]
+name = "Islefish Pie"
+time = 6
+quantity = 1
+value = 85
+category = ["Confections", "Marine Merchandise"]
+materials = { "Island Wheat" = 3, "Islefish" = 2, "Island Sugarcane" = 1 }
+
+[[handicrafts]]
 name = "Bronze Sheep"
 time = 8
 quantity = 1
@@ -246,6 +310,14 @@ value = 136
 category = ["Accessories", "Metalworks"]
 materials = { "Island Silver Ore" = 2, "Island Tinsand" = 3, "Island Coral" = 3 }
 
+[[handicrafts]]
+name = "Isleworks Pickled Radish"
+time = 8
+quantity = 1
+value = 114
+category = ["Preserved Food"]
+materials = { "Island Radish" = 4, "Island Apple" = 2, "Island Sugarcane" = 2 }
+
 
 [[rare.produce]]
 name = "Island Popoto"
@@ -287,6 +359,12 @@ name = "Sanctuary Fleece"
 
 [[rare.leavings]]
 name = "Sanctuary Claw"
+
+[[rare.leavings]]
+name = "Sanctuary Fur"
+
+[[rare.leavings]]
+name = "Sanctuary Egg"
 
 [[rare.leavings]]
 name = "Sanctuary Carapace"

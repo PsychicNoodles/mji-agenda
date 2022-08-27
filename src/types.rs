@@ -1,6 +1,8 @@
-use std::{collections::HashMap, fmt::Display};
+use std::{collections::HashMap, fmt::Display, str::FromStr};
 
+use anyhow::anyhow;
 use serde::Deserialize;
+use thiserror::Error;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Category(pub String);
@@ -15,27 +17,98 @@ pub struct Handicraft {
     pub materials: HashMap<String, usize>,
 }
 
+#[derive(Debug, Clone)]
+pub enum Popularity {
+    Low,
+    Average,
+    High,
+    VeryHigh,
+}
+
+impl Popularity {
+    pub fn multiplier(&self) -> usize {
+        match self {
+            Popularity::Low => 0,
+            Popularity::Average => 1,
+            Popularity::High => 2,
+            Popularity::VeryHigh => 3,
+        }
+    }
+}
+
+#[derive(Error, Debug)]
+#[error("Invalid value for Popularity: {0}")]
+pub struct PopularityDeserializeError(String);
+
+impl FromStr for Popularity {
+    type Err = PopularityDeserializeError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use Popularity::*;
+        match s.to_lowercase().as_str() {
+            "l" => Ok(Low),
+            "a" => Ok(Average),
+            "h" => Ok(High),
+            "v" => Ok(VeryHigh),
+            _ => Err(PopularityDeserializeError(s.to_string())),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub enum Supply {
+    Nonexistent,
+    Insufficient,
+    Sufficient,
+    Surplus,
+}
+
+impl Supply {
+    pub fn multiplier(&self) -> usize {
+        match self {
+            Supply::Nonexistent => 3,
+            Supply::Insufficient => 2,
+            Supply::Sufficient => 1,
+            Supply::Surplus => 0,
+        }
+    }
+}
+
+#[derive(Error, Debug)]
+#[error("Invalid value for Supply: {0}")]
+pub struct SupplyDeserializeError(String);
+
+impl FromStr for Supply {
+    type Err = SupplyDeserializeError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        use Supply::*;
+        match s.to_lowercase().as_str() {
+            "n" => Ok(Nonexistent),
+            "i" => Ok(Insufficient),
+            "s" => Ok(Sufficient),
+            "u" => Ok(Surplus),
+            _ => Err(SupplyDeserializeError(s.to_string())),
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct HandicraftPopSupply {
+    pub handicraft: Handicraft,
+    pub popularity: Popularity,
+    pub supply: Supply,
+}
+
 #[derive(Deserialize, Debug, Clone)]
 pub struct RareItem {
     pub name: String,
-}
-
-impl Display for RareItem {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.name)
-    }
 }
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct RareItemWithArea {
     pub name: String,
     pub area: String,
-}
-
-impl Display for RareItemWithArea {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.name)
-    }
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -57,11 +130,11 @@ pub enum RareItemVariant {
     WithArea(RareItemWithArea),
 }
 
-impl Display for RareItemVariant {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl RareItemVariant {
+    pub fn name(&self) -> &str {
         match self {
-            RareItemVariant::RareItem(i) => i.fmt(f),
-            RareItemVariant::WithArea(i) => i.fmt(f),
+            RareItemVariant::RareItem(i) => &i.name,
+            RareItemVariant::WithArea(i) => &i.name,
         }
     }
 }
@@ -71,3 +144,6 @@ pub struct RareItemCount {
     pub rare: RareItemVariant,
     pub count: usize,
 }
+
+#[derive(Debug, Clone)]
+pub struct Agenda(pub Vec<Handicraft>);
