@@ -7,6 +7,73 @@ use thiserror::Error;
 #[derive(Deserialize, Debug, Clone)]
 pub struct Category(pub String);
 
+#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
+pub struct HandicraftName<'a>(pub &'a str);
+
+#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
+pub struct MaterialName<'a>(pub &'a str);
+
+// for the graph
+#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
+pub enum HandicraftComponent<'a> {
+    Handicraft(HandicraftName<'a>),
+    Material(MaterialName<'a>),
+}
+
+// todo make this more succinct
+
+#[derive(Debug, Error)]
+#[error("Expected handicraft but was not")]
+pub struct HandicraftComponentNotHandicraft;
+
+impl<'a> TryFrom<&HandicraftComponent<'a>> for HandicraftName<'a> {
+    type Error = HandicraftComponentNotHandicraft;
+
+    fn try_from(value: &HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+        match value {
+            HandicraftComponent::Handicraft(h) => Ok(*h),
+            HandicraftComponent::Material(_) => Err(Self::Error {}),
+        }
+    }
+}
+
+impl<'a> TryFrom<&HandicraftComponent<'a>> for MaterialName<'a> {
+    type Error = HandicraftComponentNotMaterial;
+
+    fn try_from(value: &HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+        match value {
+            HandicraftComponent::Handicraft(_) => Err(Self::Error {}),
+            HandicraftComponent::Material(m) => Ok(*m),
+        }
+    }
+}
+
+impl<'a> TryFrom<HandicraftComponent<'a>> for HandicraftName<'a> {
+    type Error = HandicraftComponentNotHandicraft;
+
+    fn try_from(value: HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+        match value {
+            HandicraftComponent::Handicraft(h) => Ok(h),
+            HandicraftComponent::Material(_) => Err(Self::Error {}),
+        }
+    }
+}
+
+#[derive(Debug, Error)]
+#[error("Expected material but was not")]
+pub struct HandicraftComponentNotMaterial;
+
+impl<'a> TryFrom<HandicraftComponent<'a>> for MaterialName<'a> {
+    type Error = HandicraftComponentNotMaterial;
+
+    fn try_from(value: HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+        match value {
+            HandicraftComponent::Handicraft(_) => Err(Self::Error {}),
+            HandicraftComponent::Material(m) => Ok(m),
+        }
+    }
+}
+
 #[derive(Deserialize, Debug, Clone)]
 pub struct Handicraft {
     pub name: String,
@@ -17,7 +84,24 @@ pub struct Handicraft {
     pub materials: HashMap<String, usize>,
 }
 
-#[derive(Debug, Clone)]
+impl Handicraft {
+    pub fn as_pricing_info(&self) -> HandicraftPricingInfo {
+        HandicraftPricingInfo {
+            time: self.time,
+            quantity: self.quantity,
+            value: self.value,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+pub struct HandicraftPricingInfo {
+    pub time: usize,
+    pub quantity: usize,
+    pub value: usize,
+}
+
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub enum Popularity {
     Low,
     Average,
@@ -26,12 +110,12 @@ pub enum Popularity {
 }
 
 impl Popularity {
-    pub fn multiplier(&self) -> usize {
+    pub fn multiplier(&self) -> f64 {
         match self {
-            Popularity::Low => 0,
-            Popularity::Average => 1,
-            Popularity::High => 2,
-            Popularity::VeryHigh => 3,
+            Popularity::Low => 0.8,
+            Popularity::Average => 1.0,
+            Popularity::High => 1.2,
+            Popularity::VeryHigh => 1.4,
         }
     }
 }
@@ -55,21 +139,23 @@ impl FromStr for Popularity {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub enum Supply {
     Nonexistent,
     Insufficient,
     Sufficient,
     Surplus,
+    Overflowing,
 }
 
 impl Supply {
-    pub fn multiplier(&self) -> usize {
+    pub fn multiplier(&self) -> f64 {
         match self {
-            Supply::Nonexistent => 3,
-            Supply::Insufficient => 2,
-            Supply::Sufficient => 1,
-            Supply::Surplus => 0,
+            Supply::Nonexistent => 1.6,
+            Supply::Insufficient => 1.3,
+            Supply::Sufficient => 1.0,
+            Supply::Surplus => 0.8,
+            Supply::Overflowing => 0.6,
         }
     }
 }
@@ -88,6 +174,7 @@ impl FromStr for Supply {
             "i" => Ok(Insufficient),
             "s" => Ok(Sufficient),
             "u" => Ok(Surplus),
+            "o" => Ok(Overflowing),
             _ => Err(SupplyDeserializeError(s.to_string())),
         }
     }
@@ -145,5 +232,11 @@ pub struct RareItemCount {
     pub count: usize,
 }
 
+impl RareItemCount {
+    pub fn name(&self) -> &str {
+        self.rare.name()
+    }
+}
+
 #[derive(Debug, Clone)]
-pub struct Agenda(pub Vec<Handicraft>);
+pub struct Agenda(pub Vec<String>);
