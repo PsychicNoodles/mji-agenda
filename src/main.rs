@@ -1,19 +1,21 @@
 mod types;
 
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BinaryHeap, HashMap, HashSet},
     fs,
     io::{self, Read},
+    iter, mem,
 };
 
 use cached::proc_macro::cached;
 use petgraph::{prelude::GraphMap, Directed};
 use types::{
-    Agenda, DataFile, Handicraft, HandicraftComponent, HandicraftName, HandicraftPopSupply,
-    HandicraftPricingInfo, Popularity, RareItemCount, RareItemVariant, Supply,
+    Agenda, DataFile, Handicraft, HandicraftComponent, HandicraftName, HandicraftPricingInfo,
+    PopSupply, RareItemCount, RareItemVariant,
 };
 
 const TIME_IN_CYCLE: usize = 24;
+const MIN_PRODUCT_TIME: usize = 4;
 
 type HandicraftGraph = GraphMap<HandicraftComponent, u8, Directed>;
 
@@ -48,29 +50,57 @@ fn main() {
         .collect();
 
     println!("Input popularity (L = Low, A = Average, H = High, V = Very High) and supply (N = Nonexistent, I = Insufficient, S = Sufficient, U = Surplus) for products");
-    let handicraft_pop_supplys: Vec<_> = data
+    let handicraft_pop_supply = data
         .handicrafts
-        .into_iter()
-        .map(|item| input_product_pop_supply(&mut stdin, item))
+        .iter()
+        .map(|item| (item.name, input_product_pop_supply(&mut stdin, item)))
         .collect();
+
+    let agendas = find_agendas(
+        handicraft_pop_supply,
+        rare_item_counts,
+        recipe_nodes,
+        handicraft_graph,
+        data.handicrafts
+            .iter()
+            .map(|handicraft| (handicraft.name, handicraft.as_pricing_info()))
+            .collect(),
+    );
+
+    println!("Outputting top 5 producing agendas");
+
+    for agenda in agendas {
+        let mut it = agenda
+            .handicrafts
+            .iter()
+            .zip(agenda.values.iter())
+            .peekable();
+        while let Some((handicraft, value)) = it.next() {
+            print!("{} ({})", handicraft, value);
+            if it.peek().is_some() {
+                print!(" -> ");
+            }
+        }
+        println!();
+    }
 }
 
-fn create_material_graph<'a, I>(handicrafts: I) -> (Vec<HandicraftComponent>, HandicraftGraph)
+fn create_material_graph<'a, I>(handicrafts: I) -> (HashSet<HandicraftName>, HandicraftGraph)
 where
     I: Iterator<Item = &'a Handicraft>,
 {
     let mut graph = GraphMap::new();
-    let recipe_nodes: Vec<_> = handicrafts
+    let recipe_nodes = handicrafts
         .map(|item| {
-            let recipe_node = graph.add_node(HandicraftComponent::Handicraft(item.name));
             for mat in &item.materials {
+                let material_node = graph.add_node(HandicraftComponent::Handicraft(item.name));
                 graph.add_edge(
-                    recipe_node,
+                    material_node,
                     HandicraftComponent::Material(*mat.0),
                     u8::default(),
                 );
             }
-            recipe_node
+            item.name
         })
         .collect();
     (recipe_nodes, graph)
@@ -91,7 +121,7 @@ fn input_rare_item_count(
     RareItemCount { rare, count }
 }
 
-fn input_product_pop_supply(stdin: &mut io::Stdin, handicraft: Handicraft) -> HandicraftPopSupply {
+fn input_product_pop_supply(stdin: &mut io::Stdin, handicraft: &Handicraft) -> PopSupply {
     let mut input_buf = [0; 1];
     print!("{} popularity: ", handicraft.name);
     stdin
@@ -109,15 +139,11 @@ fn input_product_pop_supply(stdin: &mut io::Stdin, handicraft: Handicraft) -> Ha
         .parse()
         .expect("Must be a valid character");
     println!();
-    HandicraftPopSupply {
-        handicraft,
-        popularity,
-        supply,
-    }
+    PopSupply { popularity, supply }
 }
 
-fn remove_unmakeable_recipes<'a>(
-    recipe_nodes: &'a mut HashSet<HandicraftName>,
+fn remove_unmakeable_recipes(
+    recipe_nodes: &mut HashSet<HandicraftName>,
     rare_item_counts: Vec<RareItemCount>,
     handicraft_graph: &mut HandicraftGraph,
 ) {
@@ -148,38 +174,86 @@ fn remove_unmakeable_recipes<'a>(
 }
 
 fn find_agendas<'a>(
-    handicraft_pop_supply: Vec<HandicraftPopSupply>,
+    handicraft_pop_supply: HashMap<HandicraftName, PopSupply>,
     rare_item_counts: Vec<RareItemCount>,
     mut recipe_nodes: HashSet<HandicraftName>,
     mut handicraft_graph: HandicraftGraph,
     handicraft_pricing_info: HashMap<HandicraftName, HandicraftPricingInfo>,
-) -> Vec<Agenda> {
+) -> BinaryHeap<Agenda> {
     remove_unmakeable_recipes(&mut recipe_nodes, rare_item_counts, &mut handicraft_graph);
 
-    let all_agendas = recipe_nodes.iter().map(|start| {
-        // max number of products per cycle (24 / 4)
-        let mut agenda = Vec::with_capacity(11);
-        agenda.push(start.clone());
-        generate_agendas(
-            &handicraft_graph,
-            &handicraft_pricing_info,
-            agenda,
-            handicraft_pricing_info
-                .get(start)
-                .expect(&format!(
-                    "Could not find pricing info for handicraft {:?}",
-                    start
-                ))
-                .time,
-        )
-    });
-
-    todo!();
+    recipe_nodes
+        .iter()
+        .map(|start| {
+            // max potential number of products per cycle (24 / 4)
+            let mut agenda = Vec::with_capacity(11);
+            agenda.push(start.clone());
+            generate_agendas(
+                &handicraft_graph,
+                &handicraft_pricing_info,
+                agenda,
+                handicraft_pricing_info
+                    .get(start)
+                    .expect(&format!(
+                        "Could not find pricing info for handicraft {:?}",
+                        start
+                    ))
+                    .time,
+            )
+        })
+        .flat_map(IntoIterator::into_iter)
+        .map(|products| calc_agenda(products, &handicraft_pop_supply, &handicraft_pricing_info))
+        .collect()
 }
 
+#[derive(Debug)]
 enum AgendaGeneratorResult {
     Tail(Vec<HandicraftName>),
-    Intermediate(Box<Vec<AgendaGeneratorResult>>),
+    Intermediate(Vec<AgendaGeneratorResult>),
+}
+
+impl IntoIterator for AgendaGeneratorResult {
+    type Item = Vec<HandicraftName>;
+
+    type IntoIter = AgendaGeneratorResultIterator;
+
+    fn into_iter(self) -> Self::IntoIter {
+        AgendaGeneratorResultIterator {
+            children: vec![self],
+            parent: None,
+        }
+    }
+}
+
+// https://aloso.github.io/2021/03/09/creating-an-iterator
+#[derive(Debug, Default)]
+struct AgendaGeneratorResultIterator {
+    children: Vec<AgendaGeneratorResult>,
+    parent: Option<Box<AgendaGeneratorResultIterator>>,
+}
+
+impl Iterator for AgendaGeneratorResultIterator {
+    type Item = Vec<HandicraftName>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        match self.children.pop() {
+            Some(AgendaGeneratorResult::Tail(m)) => Some(m),
+            Some(AgendaGeneratorResult::Intermediate(i)) => {
+                *self = AgendaGeneratorResultIterator {
+                    children: i,
+                    parent: Some(Box::new(mem::take(self))),
+                };
+                self.next()
+            }
+            None => match self.parent.take() {
+                Some(p) => {
+                    *self = *p;
+                    self.next()
+                }
+                None => None,
+            },
+        }
+    }
 }
 
 fn generate_agendas<'a>(
@@ -189,7 +263,7 @@ fn generate_agendas<'a>(
     elapsed: usize,
 ) -> AgendaGeneratorResult {
     // can't fit anything else in agenda
-    if elapsed >= 21 {
+    if elapsed > (TIME_IN_CYCLE - MIN_PRODUCT_TIME) {
         AgendaGeneratorResult::Tail(agenda)
     } else {
         let current = agenda.last().expect("Agenda is empty");
@@ -205,35 +279,60 @@ fn generate_agendas<'a>(
                         .expect(&format!("Material pointed towards material ({:?})", recipe)),
                 )
             });
-        AgendaGeneratorResult::Intermediate(Box::new(
+        AgendaGeneratorResult::Intermediate(
             candidates
                 .map(|c| {
                     let mut new_agenda = agenda.clone();
-                    new_agenda.push(
-                        c.try_into()
-                            .expect(&format!("Tried adding material to agenda ({:?})", c)),
-                    );
+                    let new_handicraft: HandicraftName = c
+                        .try_into()
+                        .expect(&format!("Tried adding material to agenda ({:?})", c));
+                    let elapsed = elapsed
+                        + handicraft_pricing_info
+                            .get(&new_handicraft)
+                            .expect(&format!(
+                                "Could not find pricing info for handicraft {:?}",
+                                c
+                            ))
+                            .time;
+                    new_agenda.push(new_handicraft);
                     generate_agendas(
                         handicraft_graph,
                         handicraft_pricing_info,
                         new_agenda,
-                        elapsed
-                            + handicraft_pricing_info
-                                .get(
-                                    &c.try_into().expect(&format!(
-                                        "Tried adding material to agenda ({:?})",
-                                        c
-                                    )),
-                                )
-                                .expect(&format!(
-                                    "Could not find pricing info for handicraft {:?}",
-                                    c
-                                ))
-                                .time,
+                        elapsed,
                     )
                 })
                 .collect(),
-        ))
+        )
+    }
+}
+
+fn calc_agenda(
+    agenda: Vec<HandicraftName>,
+    handicraft_pop_supplies: &HashMap<HandicraftName, PopSupply>,
+    handicraft_pricing_info: &HashMap<HandicraftName, HandicraftPricingInfo>,
+) -> Agenda {
+    let pricing: Vec<_> = agenda
+        .iter()
+        .zip(iter::once(false).chain(iter::repeat(true)))
+        .map(|(handicraft, efficiency_bonus)| {
+            calc_abs_pricing(
+                efficiency_bonus,
+                *handicraft_pop_supplies.get(&handicraft).expect(&format!(
+                    "Agenda had handicraft without popularity/supply ({})",
+                    handicraft
+                )),
+                *handicraft_pricing_info.get(&handicraft).expect(&format!(
+                    "Agenda had handicraft without pricing info ({})",
+                    handicraft
+                )),
+            )
+        })
+        .collect();
+    Agenda {
+        handicrafts: agenda,
+        total_value: pricing.iter().sum(),
+        values: pricing,
     }
 }
 
@@ -242,11 +341,12 @@ fn generate_agendas<'a>(
 #[cached()]
 fn calc_abs_pricing(
     efficiency_bonus: bool,
-    popularity: Popularity,
-    supply: Supply,
+    pop_supply: PopSupply,
     handicraft: HandicraftPricingInfo,
-) -> f64 {
-    (if efficiency_bonus { 2.0 } else { 1.0 })
-        * (popularity.multiplier() * supply.multiplier() * (handicraft.value as f64).floor())
-            .floor()
+) -> usize {
+    (if efficiency_bonus { 2 } else { 1 })
+        * (pop_supply.popularity.multiplier()
+            * pop_supply.supply.multiplier()
+            * (handicraft.value as f64).floor())
+        .floor() as usize
 }

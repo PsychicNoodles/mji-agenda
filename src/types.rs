@@ -196,7 +196,7 @@ impl Handicraft {
     }
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
 pub struct HandicraftPricingInfo {
     pub time: usize,
     pub quantity: usize,
@@ -282,9 +282,8 @@ impl FromStr for Supply {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct HandicraftPopSupply {
-    pub handicraft: Handicraft,
+#[derive(Debug, Clone, Copy, Hash, PartialEq, Eq)]
+pub struct PopSupply {
     pub popularity: Popularity,
     pub supply: Supply,
 }
@@ -340,5 +339,21 @@ impl RareItemCount {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Agenda(pub Vec<String>);
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Agenda {
+    pub handicrafts: Vec<HandicraftName>,
+    pub values: Vec<usize>,
+    pub total_value: usize,
+}
+
+impl PartialOrd for Agenda {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Agenda {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.total_value.cmp(&other.total_value)
+    }
+}
