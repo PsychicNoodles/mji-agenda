@@ -161,19 +161,23 @@ fn remove_unmakeable_recipes(
         })
         .collect();
     for recipe in unusable_recipes {
-        let handicraft_name = recipe.try_into().expect(&format!(
-            "Rare item node was connected to another material ({:?})",
-            recipe
-        ));
-        let node = recipe_nodes.take(&handicraft_name).expect(&format!(
-            "Rare item node was connected to non-existant recipe ({})",
-            handicraft_name
-        ));
+        let handicraft_name = recipe.try_into().unwrap_or_else(|_| {
+            panic!(
+                "Rare item node was connected to another material ({:?})",
+                recipe
+            )
+        });
+        let node = recipe_nodes.take(&handicraft_name).unwrap_or_else(|| {
+            panic!(
+                "Rare item node was connected to non-existant recipe ({})",
+                handicraft_name
+            )
+        });
         handicraft_graph.remove_node(HandicraftComponent::Handicraft(node));
     }
 }
 
-fn find_agendas<'a>(
+fn find_agendas(
     handicraft_pop_supply: HashMap<HandicraftName, PopSupply>,
     rare_item_counts: Vec<RareItemCount>,
     mut recipe_nodes: HashSet<HandicraftName>,
@@ -187,17 +191,16 @@ fn find_agendas<'a>(
         .map(|start| {
             // max potential number of products per cycle (24 / 4)
             let mut agenda = Vec::with_capacity(11);
-            agenda.push(start.clone());
+            agenda.push(*start);
             generate_agendas(
                 &handicraft_graph,
                 &handicraft_pricing_info,
                 agenda,
                 handicraft_pricing_info
                     .get(start)
-                    .expect(&format!(
-                        "Could not find pricing info for handicraft {:?}",
-                        start
-                    ))
+                    .unwrap_or_else(|| {
+                        panic!("Could not find pricing info for handicraft {:?}", start)
+                    })
                     .time,
             )
         })
@@ -256,7 +259,7 @@ impl Iterator for AgendaGeneratorResultIterator {
     }
 }
 
-fn generate_agendas<'a>(
+fn generate_agendas(
     handicraft_graph: &HandicraftGraph,
     handicraft_pricing_info: &HashMap<HandicraftName, HandicraftPricingInfo>,
     agenda: Vec<HandicraftName>,
@@ -267,32 +270,30 @@ fn generate_agendas<'a>(
         AgendaGeneratorResult::Tail(agenda)
     } else {
         let current = agenda.last().expect("Agenda is empty");
-        let candidates = handicraft_graph
-            .neighbors(HandicraftComponent::Handicraft(*current))
-            .flat_map(|neighbor| {
-                handicraft_graph.neighbors_directed(neighbor, petgraph::Direction::Incoming)
-            })
-            .filter(|recipe| {
-                !agenda.contains(
-                    &recipe
-                        .try_into()
-                        .expect(&format!("Material pointed towards material ({:?})", recipe)),
-                )
-            });
+        let candidates =
+            handicraft_graph
+                .neighbors(HandicraftComponent::Handicraft(*current))
+                .flat_map(|neighbor| {
+                    handicraft_graph.neighbors_directed(neighbor, petgraph::Direction::Incoming)
+                })
+                .filter(|recipe| {
+                    !agenda.contains(&recipe.try_into().unwrap_or_else(|_| {
+                        panic!("Material pointed towards material ({:?})", recipe)
+                    }))
+                });
         AgendaGeneratorResult::Intermediate(
             candidates
                 .map(|c| {
                     let mut new_agenda = agenda.clone();
                     let new_handicraft: HandicraftName = c
                         .try_into()
-                        .expect(&format!("Tried adding material to agenda ({:?})", c));
+                        .unwrap_or_else(|_| panic!("Tried adding material to agenda ({:?})", c));
                     let elapsed = elapsed
                         + handicraft_pricing_info
                             .get(&new_handicraft)
-                            .expect(&format!(
-                                "Could not find pricing info for handicraft {:?}",
-                                c
-                            ))
+                            .unwrap_or_else(|| {
+                                panic!("Could not find pricing info for handicraft {:?}", c)
+                            })
                             .time;
                     new_agenda.push(new_handicraft);
                     generate_agendas(
@@ -318,14 +319,18 @@ fn calc_agenda(
         .map(|(handicraft, efficiency_bonus)| {
             calc_abs_pricing(
                 efficiency_bonus,
-                *handicraft_pop_supplies.get(&handicraft).expect(&format!(
-                    "Agenda had handicraft without popularity/supply ({})",
-                    handicraft
-                )),
-                *handicraft_pricing_info.get(&handicraft).expect(&format!(
-                    "Agenda had handicraft without pricing info ({})",
-                    handicraft
-                )),
+                *handicraft_pop_supplies.get(handicraft).unwrap_or_else(|| {
+                    panic!(
+                        "Agenda had handicraft without popularity/supply ({})",
+                        handicraft
+                    )
+                }),
+                *handicraft_pricing_info.get(handicraft).unwrap_or_else(|| {
+                    panic!(
+                        "Agenda had handicraft without pricing info ({})",
+                        handicraft
+                    )
+                }),
             )
         })
         .collect();
