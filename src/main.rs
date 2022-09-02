@@ -21,7 +21,7 @@ type HandicraftGraph = GraphMap<HandicraftComponent, u8, Directed>;
 
 fn main() {
     let raw = fs::read_to_string("handicrafts.toml").unwrap();
-    let data: DataFile = toml::from_str(&raw).unwrap();
+    let data: DataFile = raw.parse::<toml::Value>().unwrap().try_into().unwrap();
 
     let (recipe_nodes, handicraft_graph) = create_material_graph(data.handicrafts.iter());
 
@@ -48,6 +48,7 @@ fn main() {
         )
         .map(|item| input_rare_item_count(&stdin, &mut input_buf, item))
         .collect();
+    println!("rare_item_counts: {:?}", rare_item_counts);
 
     println!("Input popularity (L = Low, A = Average, H = High, V = Very High) and supply (N = Nonexistent, I = Insufficient, S = Sufficient, U = Surplus) for products");
     let handicraft_pop_supply = data
@@ -55,6 +56,7 @@ fn main() {
         .iter()
         .map(|item| (item.name, input_product_pop_supply(&mut stdin, item)))
         .collect();
+    println!("handicraft_pop_supply: {:?}", handicraft_pop_supply);
 
     let agendas = find_agendas(
         handicraft_pop_supply,

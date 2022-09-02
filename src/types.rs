@@ -1,7 +1,7 @@
 use std::{collections::HashMap, str::FromStr};
 
 use serde::Deserialize;
-use strum_macros::Display;
+use strum_macros::{Display, EnumString};
 use thiserror::Error;
 
 #[derive(Deserialize, Debug, Clone)]
@@ -62,7 +62,9 @@ pub enum HandicraftName {
     IsleworksCrook,
 }
 
-#[derive(Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Display)]
+#[derive(
+    Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Display, EnumString,
+)]
 #[strum(serialize_all = "title_case")]
 pub enum MaterialName {
     IslandAlyssum,
@@ -112,7 +114,7 @@ pub enum MaterialName {
     SanctuaryFleece,
     SanctuaryFur,
     SanctuaryHorn,
-    SanctuaryMil,
+    SanctuaryMilk,
 }
 
 // for the graph
