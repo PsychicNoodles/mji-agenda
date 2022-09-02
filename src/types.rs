@@ -1,23 +1,121 @@
-use std::{collections::HashMap, fmt::Display, str::FromStr};
+use std::{collections::HashMap, str::FromStr};
 
-use anyhow::anyhow;
 use serde::Deserialize;
 use thiserror::Error;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Category(pub String);
 
-#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
-pub struct HandicraftName<'a>(pub &'a str);
+#[derive(Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
+pub enum HandicraftName {
+    IsleworksPotion,
+    IsleworksFiresand,
+    IsleworksWoodenChair,
+    IsleworksGrilledClam,
+    IsleworksNecklace,
+    IsleworksCoralRing,
+    IsleworksBarbut,
+    IsleworksMacuahuitl,
+    IsleworksSauerkraut,
+    IsleworksBakedPumpkin,
+    IsleworksTunic,
+    IsleworksCulinaryKnife,
+    IsleworksBrush,
+    IsleworksBoiledEgg,
+    IsleworksHora,
+    IsleworksEarrings,
+    IsleworksButter,
+    IsleworksBrickCounter,
+    BronzeSheep,
+    IsleworksGrowthFormula,
+    IsleworksGarnetRapier,
+    IsleworksSpruceRoundShield,
+    IsleworksSharkOil,
+    IsleworksSilverEarCuffs,
+    IsleworksSweetPopoto,
+    IsleworksParsnipSalad,
+    IsleworksCaramels,
+    IsleworksRibbon,
+    IsleworksRope,
+    IsleworksCavaliersHat,
+    IsleworksHorn,
+    IsleworksSaltCod,
+    IsleworksSquidInk,
+    IsleworksEssentialDraught,
+    IsleberryJam,
+    IsleworksTomatoRelish,
+    IsleworksOnionSoup,
+    IslefishPie,
+    IsleworksCornFlakes,
+    IsleworksPickledRadish,
+    IsleworksIronAxe,
+    IsleworksQuartzRing,
+    IsleworksPorcelainVase,
+    IsleworksVegetableJuice,
+    IsleworksPumpkinPudding,
+    IsleworksSheepfluffRug,
+    IsleworksGardenScythe,
+    IsleworksBed,
+    IsleworksScaleFingers,
+    IsleworksCrook,
+}
 
-#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
-pub struct MaterialName<'a>(pub &'a str);
+pub enum MaterialName {
+    IslandAlyssum,
+    IslandApple,
+    IslandBranch,
+    IslandCabbage,
+    IslandClam,
+    IslandClay,
+    IslandCopperOre,
+    IslandCoral,
+    IslandCorn,
+    IslandCottonBoll,
+    IslandHammerhead,
+    IslandHemp,
+    IslandJellyfish,
+    IslandLaver,
+    IslandLimestone,
+    IslandLog,
+    IslandOnion,
+    IslandPalmLeaf,
+    IslandPalmLog,
+    IslandParsnip,
+    IslandPopoto,
+    IslandPumpkin,
+    IslandRadish,
+    IslandRockSalt,
+    IslandSand,
+    IslandSap,
+    IslandSilverOre,
+    IslandSpruceLog,
+    IslandSquid,
+    IslandStone,
+    IslandSugarcane,
+    IslandTinsand,
+    IslandTomato,
+    IslandVine,
+    IslandWheat,
+    Isleberry,
+    Islefish,
+    Islewort,
+    RawIslandGarnet,
+    SanctuaryCarapace,
+    SanctuaryClaw,
+    SanctuaryEgg,
+    SanctuaryFang,
+    SanctuaryFeather,
+    SanctuaryFleece,
+    SanctuaryFur,
+    SanctuaryHorn,
+    SanctuaryMil,
+}
 
 // for the graph
 #[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
-pub enum HandicraftComponent<'a> {
-    Handicraft(HandicraftName<'a>),
-    Material(MaterialName<'a>),
+pub enum HandicraftComponent {
+    Handicraft(HandicraftName),
+    Material(MaterialName),
 }
 
 // todo make this more succinct
@@ -26,10 +124,10 @@ pub enum HandicraftComponent<'a> {
 #[error("Expected handicraft but was not")]
 pub struct HandicraftComponentNotHandicraft;
 
-impl<'a> TryFrom<&HandicraftComponent<'a>> for HandicraftName<'a> {
+impl TryFrom<&HandicraftComponent> for HandicraftName {
     type Error = HandicraftComponentNotHandicraft;
 
-    fn try_from(value: &HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+    fn try_from(value: &HandicraftComponent) -> Result<Self, Self::Error> {
         match value {
             HandicraftComponent::Handicraft(h) => Ok(*h),
             HandicraftComponent::Material(_) => Err(Self::Error {}),
@@ -37,10 +135,10 @@ impl<'a> TryFrom<&HandicraftComponent<'a>> for HandicraftName<'a> {
     }
 }
 
-impl<'a> TryFrom<&HandicraftComponent<'a>> for MaterialName<'a> {
+impl TryFrom<&HandicraftComponent> for MaterialName {
     type Error = HandicraftComponentNotMaterial;
 
-    fn try_from(value: &HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+    fn try_from(value: &HandicraftComponent) -> Result<Self, Self::Error> {
         match value {
             HandicraftComponent::Handicraft(_) => Err(Self::Error {}),
             HandicraftComponent::Material(m) => Ok(*m),
@@ -48,10 +146,10 @@ impl<'a> TryFrom<&HandicraftComponent<'a>> for MaterialName<'a> {
     }
 }
 
-impl<'a> TryFrom<HandicraftComponent<'a>> for HandicraftName<'a> {
+impl TryFrom<HandicraftComponent> for HandicraftName {
     type Error = HandicraftComponentNotHandicraft;
 
-    fn try_from(value: HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+    fn try_from(value: HandicraftComponent) -> Result<Self, Self::Error> {
         match value {
             HandicraftComponent::Handicraft(h) => Ok(h),
             HandicraftComponent::Material(_) => Err(Self::Error {}),
@@ -63,10 +161,10 @@ impl<'a> TryFrom<HandicraftComponent<'a>> for HandicraftName<'a> {
 #[error("Expected material but was not")]
 pub struct HandicraftComponentNotMaterial;
 
-impl<'a> TryFrom<HandicraftComponent<'a>> for MaterialName<'a> {
+impl TryFrom<HandicraftComponent> for MaterialName {
     type Error = HandicraftComponentNotMaterial;
 
-    fn try_from(value: HandicraftComponent<'a>) -> Result<Self, Self::Error> {
+    fn try_from(value: HandicraftComponent) -> Result<Self, Self::Error> {
         match value {
             HandicraftComponent::Handicraft(_) => Err(Self::Error {}),
             HandicraftComponent::Material(m) => Ok(m),

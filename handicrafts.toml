@@ -1,388 +1,388 @@
 [[handicrafts]]
-name = "Isleworks Potion"
+name = IsleworksPotion
 time = 4
 quantity = 1
 value = 28
-category = ["Concoctions"]
-materials = { "Island Palm Leaf" = 2, "Islewort" = 2 }
+category = [Concoctions]
+materials = { IslandPalmLeaf = 2, Islewort = 2 }
 
 [[handicrafts]]
-name = "Isleworks Firesand"
+name = IsleworksFiresand
 time = 4
 quantity = 1
 value = 28
-category = ["Concoctions", "Unburied Treasures"]
-materials = { "Island Sand" = 2, "Island Limestone" = 1, "Islewort" = 1 }
+category = [Concoctions, UnburiedTreasures]
+materials = { IslandSand = 2, IslandLimestone = 1, Islewort = 1 }
 
 [[handicrafts]]
-name = "Isleworks Grilled Clam"
+name = IsleworksGrilledClam
 time = 4
 quantity = 1
 value = 28
-category = ["Foodstuffs", "Marine Merchandise"]
-materials = { "Island Clam" = 2, "Island Laver" = 2 }
+category = [Foodstuffs, MarineMerchandise]
+materials = { IslandClam = 2, IslandLaver = 2 }
 
 [[handicrafts]]
-name = "Isleworks Necklace"
+name = IsleworksNecklace
 time = 4
 quantity = 1
 value = 28
-category = ["Accessories", "Woodworks"]
-materials = { "Island Branch" = 3, "Island Vine" = 1 }
+category = [Accessories, Woodworks]
+materials = { IslandBranch = 3, IslandVine = 1 }
 
 [[handicrafts]]
-name = "Isleworks Sauerkraut"
+name = IsleworksSauerkraut
 time = 4
 quantity = 1
 value = 40
-category = ["Preserved Food"]
-materials = { "Island Cabbage" = 1, "Island Rock Salt" = 3 }
+category = [PreservedFood]
+materials = { IslandCabbage = 1, IslandRockSalt = 3 }
 
 [[handicrafts]]
-name = "Isleworks Baked Pumpkin"
+name = IsleworksBakedPumpkin
 time = 4
 quantity = 1
 value = 40
-category = ["Foodstuffs"]
-materials = { "Island Pumpkin" = 1, "Island Sap" = 3 }
+category = [Foodstuffs]
+materials = { IslandPumpkin = 1, IslandSap = 3 }
 
 [[handicrafts]]
-name = "Isleworks Culinary Knife"
+name = IsleworksCulinaryKnife
 time = 4
 quantity = 1
 value = 44
-category = ["Sundries", "Creature Creations"]
-materials = { "Sanctuary Claw" = 1, "Island Palm Log" = 3 }
+category = [Sundries, CreatureCreations]
+materials = { SanctuaryClaw = 1, IslandPalmLog = 3 }
 
 [[handicrafts]]
-name = "Isleworks Brush"
+name = IsleworksBrush
 time = 4
 quantity = 1
 value = 44
-category = ["Sundries", "Woodworks"]
-materials = { "Sanctuary Fur" = 1, "Island Palm Log" = 3 }
+category = [Sundries, Woodworks]
+materials = { SanctuaryFur = 1, IslandPalmLog = 3 }
 
 [[handicrafts]]
-name = "Isleworks Boiled Egg"
+name = IsleworksBoiledEgg
 time = 4
 quantity = 1
 value = 44
-category = ["Foodstuffs", "Creature Creations"]
-materials = { "Sanctuary Egg" = 1, "Island Laver" = 3 }
+category = [Foodstuffs, CreatureCreations]
+materials = { SanctuaryEgg = 1, IslandLaver = 3 }
 
 [[handicrafts]]
-name = "Isleworks Earrings"
+name = IsleworksEarrings
 time = 4
 quantity = 1
 value = 44
-category = ["Accessories", "Creature Creations"]
-materials = { "Sanctuary Fang" = 1, "Island Vine" = 3 }
+category = [Accessories, CreatureCreations]
+materials = { SanctuaryFang = 1, IslandVine = 3 }
 
 [[handicrafts]]
-name = "Isleworks Butter"
+name = IsleworksButter
 time = 4
 quantity = 1
 value = 44
-category = ["Ingredients", "Creature Creations"]
-materials = { "Sanctuary Milk" = 1, "Island Rock Salt" = 3 }
+category = [Ingredients, CreatureCreations]
+materials = { SanctuaryMilk = 1, IslandRockSalt = 3 }
 
 [[handicrafts]]
-name = "Isleworks Parsnip Salad"
+name = IsleworksParsnipSalad
 time = 4
 quantity = 1
 value = 48
-category = ["Foodstuffs"]
-materials = { "Island Parsnip" = 2, "Islewort" = 1, "Island Sap" = 1 }
+category = [Foodstuffs]
+materials = { IslandParsnip = 2, Islewort = 1, IslandSap = 1 }
 
 [[handicrafts]]
-name = "Isleworks Rope"
+name = IsleworksRope
 time = 4
 quantity = 1
 value = 36
-category = ["Sundries", "Textiles"]
-materials = { "Island Hemp" = 2, "Islewort" = 1, "Island Vine" = 1 }
+category = [Sundries, Textiles]
+materials = { IslandHemp = 2, Islewort = 1, IslandVine = 1 }
 
 [[handicrafts]]
-name = "Isleworks Squid Ink"
+name = IsleworksSquidInk
 time = 4
 quantity = 1
 value = 39
-category = ["Ingredients", "Marine Merchandise"]
-materials = { "Island Squid" = 2, "Island Rock Salt" = 2 }
+category = [Ingredients, MarineMerchandise]
+materials = { IslandSquid = 2, IslandRockSalt = 2 }
 
 [[handicrafts]]
-name = "Isleworks Tomato Relish"
+name = IsleworksTomatoRelish
 time = 4
 quantity = 1
 value = 57
-category = ["Ingredients"]
-materials = { "Island Tomato" = 2, "Island Sugarcane" = 1, "Islewort" = 1 }
+category = [Ingredients]
+materials = { IslandTomato = 2, IslandSugarcane = 1, Islewort = 1 }
 
 [[handicrafts]]
-name = "Isleworks Corn Flakes"
+name = IsleworksCornFlakes
 time = 4
 quantity = 1
 value = 57
-category = ["Preserved Food"]
-materials = { "Island Corn" = 2, "Island Sugarcane" = 2 }
+category = [PreservedFood]
+materials = { IslandCorn = 2, IslandSugarcane = 2 }
 
 [[handicrafts]]
-name = "Isleworks Wooden Chair"
+name = IsleworksWoodenChair
 time = 6
 quantity = 1
 value = 42
-category = ["Furnishings", "Woodworks"]
-materials = { "Island Log" = 4, "Island Vine" = 2 }
+category = [Furnishings, Woodworks]
+materials = { IslandLog = 4, IslandVine = 2 }
 
 [[handicrafts]]
-name = "Isleworks Coral Ring"
+name = IsleworksCoralRing
 time = 6
 quantity = 1
 value = 42
-category = ["Accessories", "Marine Merchandise"]
-materials = { "Island Coral" = 3, "Island Vine" = 3 }
+category = [Accessories, MarineMerchandise]
+materials = { IslandCoral = 3, IslandVine = 3 }
 
 [[handicrafts]]
-name = "Island Barbut"
+name = IslandBarbut
 time = 6
 quantity = 1
 value = 42
-category = ["Attire", "Metalworks"]
-materials = { "Island Copper Ore" = 3, "Island Sand" = 3 }
+category = [Attire, Metalworks]
+materials = { IslandCopperOre = 3, IslandSand = 3 }
 
 [[handicrafts]]
-name = "Isleworks Macuahuitl"
+name = IsleworksMacuahuitl
 time = 6
 quantity = 1
 value = 42
-category = ["Arms", "Woodworks"]
-materials = { "Island Palm Log" = 3, "Island Stone" = 3 }
+category = [Arms, Woodworks]
+materials = { IslandPalmLog = 3, IslandStone = 3 }
 
 [[handicrafts]]
-name = "Isleworks Tunic"
+name = IsleworksTunic
 time = 6
 quantity = 1
 value = 42
-category = ["Attire", "Textiles"]
-materials = { "Sanctuary Fleece" = 2, "Island Vine" = 4 }
+category = [Attire, Textiles]
+materials = { SanctuaryFleece = 2, IslandVine = 4 }
 
 [[handicrafts]]
-name = "Isleworks Hora"
+name = IsleworksHora
 time = 6
 quantity = 1
 value = 72
-category = ["Arms", "Creature Creations"]
-materials = { "Sanctuary Carapace" = 2, "Island Stone" = 4 }
+category = [Arms, CreatureCreations]
+materials = { SanctuaryCarapace = 2, IslandStone = 4 }
 
 [[handicrafts]]
-name = "Isleworks Brick Counter"
+name = IsleworksBrickCounter
 time = 6
 quantity = 1
 value = 48
-category = ["Furnishings", "Unburied Treasures"]
-materials = { "Island Clay" = 2, "Island Limestone" = 2, "Island Palm Log" = 2 }
+category = [Furnishings, UnburiedTreasures]
+materials = { IslandClay = 2, IslandLimestone = 2, IslandPalmLog = 2 }
 
 [[handicrafts]]
-name = "Isleworks Sweet Popoto"
+name = IsleworksSweetPopoto
 time = 6
 quantity = 1
 value = 72
-category = ["Confections"]
-materials = { "Island Popoto" = 2, "Sanctuary Milk" = 1, "Island Sap" = 3 }
+category = [Confections]
+materials = { IslandPopoto = 2, SanctuaryMilk = 1, IslandSap = 3 }
 
 [[handicrafts]]
-name = "Isleworks Caramels"
+name = IsleworksCaramels
 time = 6
 quantity = 1
 value = 81
-category = ["Confections"]
-materials = { "Island Sugarcane" = 4, "Sanctuary Milk" = 2 }
+category = [Confections]
+materials = { IslandSugarcane = 4, SanctuaryMilk = 2 }
 
 [[handicrafts]]
-name = "Isleworks Ribbon"
+name = IsleworksRibbon
 time = 6
 quantity = 1
 value = 54
-category = ["Accessories", "Textiles"]
-materials = { "Island Cotton Boll" = 2, "Island Copper Ore" = 2, "Island Vine" = 2 }
+category = [Accessories, Textiles]
+materials = { IslandCottonBoll = 2, IslandCopperOre = 2, IslandVine = 2 }
 
 [[handicrafts]]
-name = "Isleworks Cavalier's Hat"
+name = IsleworksCavaliersHat
 time = 6
 quantity = 1
 value = 81
-category = ["Attire", "Textiles"]
-materials = { "Sanctuary Feather" = 2, "Island Cotton Boll" = 2, "Island Hemp" = 2 }
+category = [Attire, Textiles]
+materials = { SanctuaryFeather = 2, IslandCottonBoll = 2, IslandHemp = 2 }
 
 [[handicrafts]]
-name = "Isleworks Horn"
+name = IsleworksHorn
 time = 6
 quantity = 1
 value = 81
-category = ["Sundries", "Creature Creations"]
-materials = { "Sanctuary Horn" = 2, "Island Clay" = 2, "Island Hemp" = 2 }
+category = [Sundries, CreatureCreations]
+materials = { SanctuaryHorn = 2, IslandClay = 2, IslandHemp = 2 }
 
 [[handicrafts]]
-name = "Isleworks Salt Cod"
+name = IsleworksSaltCod
 time = 6
 quantity = 1
 value = 59
-category = ["Preserved Food", "Marine Merchandise"]
-materials = { "Islefish" = 4, "Island Rock Salt" = 2 }
+category = [PreservedFood, MarineMerchandise]
+materials = { Islefish = 4, IslandRockSalt = 2 }
 
 [[handicrafts]]
-name = "Isleworks Essential Draught"
+name = IsleworksEssentialDraught
 time = 6
 quantity = 1
 value = 59
-category = ["Concoctions", "Marine Merchandise"]
-materials = { "Island Jellyfish" = 2, "Island Palm Leaf" = 2, "Island Laver" = 2 }
+category = [Concoctions, MarineMerchandise]
+materials = { IslandJellyfish = 2, IslandPalmLeaf = 2, IslandLaver = 2 }
 
 [[handicrafts]]
-name = "Isleberry Jam"
+name = IsleberryJam
 time = 6
 quantity = 1
 value = 85
-category = ["Ingredients"]
-materials = { "Isleberry" = 3, "Island Sugarcane" = 2, "Island Sap" = 2 }
+category = [Ingredients]
+materials = { Isleberry = 3, IslandSugarcane = 2, IslandSap = 2 }
 
 [[handicrafts]]
-name = "Isleworks Onion Soup"
+name = IsleworksOnionSoup
 time = 6
 quantity = 1
 value = 85
-category = ["Foodstuffs"]
-materials = { "Island Onion" = 3, "Island Rock Salt" = 2, "Islewort" = 1 }
+category = [Foodstuffs]
+materials = { IslandOnion = 3, IslandRockSalt = 2, Islewort = 1 }
 
 [[handicrafts]]
-name = "Islefish Pie"
+name = IslefishPie
 time = 6
 quantity = 1
 value = 85
-category = ["Confections", "Marine Merchandise"]
-materials = { "Island Wheat" = 3, "Islefish" = 2, "Island Sugarcane" = 1 }
+category = [Confections, MarineMerchandise]
+materials = { IslandWheat = 3, Islefish = 2, IslandSugarcane = 1 }
 
 [[handicrafts]]
-name = "Bronze Sheep"
+name = BronzeSheep
 time = 8
 quantity = 1
 value = 64
-category = ["Furnishings", "Metalworks"]
-materials = { "Island Tinsand" = 3, "Island Copper Ore" = 3, "Island Log" = 2 }
+category = [Furnishings, Metalworks]
+materials = { IslandTinsand = 3, IslandCopperOre = 3, IslandLog = 2 }
 
 [[handicrafts]]
-name = "Isleworks Growth Formula"
+name = IsleworksGrowthFormula
 time = 8
 quantity = 1
 value = 136
-category = ["Concoctions"]
-materials = { "Island Alyssum" = 2, "Islewort" = 2, "Island Branch" = 3 }
+category = [Concoctions]
+materials = { IslandAlyssum = 2, Islewort = 2, IslandBranch = 3 }
 
 [[handicrafts]]
-name = "Isleworks Garnet Rapier"
+name = IsleworksGarnetRapier
 time = 8
 quantity = 1
 value = 136
-category = ["Arms", "Unburied Treasures"]
-materials = { "Raw Island Garnet" = 2, "Island Copper Ore" = 3, "Island Tinsand" = 3 }
+category = [Arms, UnburiedTreasures]
+materials = { RawIslandGarnet = 2, IslandCopperOre = 3, IslandTinsand = 3 }
 
 [[handicrafts]]
-name = "Isleworks Spruce Round Shield"
+name = IsleworksSpruceRoundShield
 time = 8
 quantity = 1
 value = 136
-category = ["Attire", "Woodworks"]
-materials = { "Island Spruce Log" = 2, "Island Copper Ore" = 3, "Island Stone" = 3 }
+category = [Attire, Woodworks]
+materials = { IslandSpruceLog = 2, IslandCopperOre = 3, IslandStone = 3 }
 
 [[handicrafts]]
-name = "Isleworks Shark Oil"
+name = IsleworksSharkOil
 time = 8
 quantity = 1
 value = 136
-category = ["Sundries", "Marine Merchandise"]
-materials = { "Island Hammerhead" = 2, "Island Laver" = 3, "Island Sap" = 3 }
+category = [Sundries, MarineMerchandise]
+materials = { IslandHammerhead = 2, IslandLaver = 3, IslandSap = 3 }
 
 [[handicrafts]]
-name = "Isleworks Silver Ear Cuffs"
+name = IsleworksSilverEarCuffs
 time = 8
 quantity = 1
 value = 136
-category = ["Accessories", "Metalworks"]
-materials = { "Island Silver Ore" = 2, "Island Tinsand" = 3, "Island Coral" = 3 }
+category = [Accessories, Metalworks]
+materials = { IslandSilverOre = 2, IslandTinsand = 3, IslandCoral = 3 }
 
 [[handicrafts]]
-name = "Isleworks Pickled Radish"
+name = IsleworksPickledRadish
 time = 8
 quantity = 1
 value = 114
-category = ["Preserved Food"]
-materials = { "Island Radish" = 4, "Island Apple" = 2, "Island Sugarcane" = 2 }
+category = [PreservedFood]
+materials = { IslandRadish = 4, IslandApple = 2, IslandSugarcane = 2 }
 
 
 [[rare.produce]]
-name = "Island Popoto"
+name = IslandPopoto
 
 [[rare.produce]]
-name = "Island Cabbage"
+name = IslandCabbage
 
 [[rare.produce]]
-name = "Island Pumpkin"
+name = IslandPumpkin
 
 [[rare.produce]]
-name = "Island Parsnip"
+name = IslandParsnip
 
 [[rare.produce]]
-name = "Island Cotton Boll"
+name = IslandCottonBoll
 
 [[rare.material]]
-name = "Island Alyssum"
-area = "Meandering Meadows"
+name = IslandAlyssum
+area = MeanderingMeadows
 
 [[rare.material]]
-name = "Raw Island Garnet"
-area = "Fatal Falls"
+name = RawIslandGarnet
+area = FatalFalls
 
 [[rare.material]]
-name = "Island Spruce Log"
-area = "Wild Woods"
+name = IslandSpruceLog
+area = WildWoods
 
 [[rare.material]]
-name = "Island Hammerhead"
-area = "Bending Beaches"
+name = IslandHammerhead
+area = BendingBeaches
 
 [[rare.material]]
-name = "Island Silver Ore"
-area = "Mossy Mountains"
+name = IslandSilverOre
+area = MossyMountains
 
 [[rare.leavings]]
-name = "Sanctuary Fleece"
+name = SanctuaryFleece
 
 [[rare.leavings]]
-name = "Sanctuary Claw"
+name = SanctuaryClaw
 
 [[rare.leavings]]
-name = "Sanctuary Fur"
+name = SanctuaryFur
 
 [[rare.leavings]]
-name = "Sanctuary Egg"
+name = SanctuaryEgg
 
 [[rare.leavings]]
-name = "Sanctuary Carapace"
+name = SanctuaryCarapace
 
 [[rare.leavings]]
-name = "Sanctuary Fang"
+name = SanctuaryFang
 
 [[rare.leavings]]
-name = "Sanctuary Milk"
+name = SanctuaryMilk
 
 [[rare.leavings]]
-name = "Sanctuary Egg"
+name = SanctuaryEgg
 
 [[rare.leavings]]
-name = "Sanctuary Fur"
+name = SanctuaryFur
 
 [[rare.leavings]]
-name = "Sanctuary Feather"
+name = SanctuaryFeather
 
-[[rare.leavings]]
-name = "Sanctuary Horn"
+[[rare.leavings]
+name = SanctuaryHorn
