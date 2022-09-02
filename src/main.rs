@@ -10,12 +10,12 @@ use cached::proc_macro::cached;
 use petgraph::{prelude::GraphMap, Directed};
 use types::{
     Agenda, DataFile, Handicraft, HandicraftComponent, HandicraftName, HandicraftPopSupply,
-    HandicraftPricingInfo, MaterialName, Popularity, RareItemCount, RareItemVariant, Supply,
+    HandicraftPricingInfo, Popularity, RareItemCount, RareItemVariant, Supply,
 };
 
 const TIME_IN_CYCLE: usize = 24;
 
-type HandicraftGraph<'a> = GraphMap<HandicraftComponent<'a>, u8, Directed>;
+type HandicraftGraph = GraphMap<HandicraftComponent, u8, Directed>;
 
 fn main() {
     let raw = fs::read_to_string("handicrafts.toml").unwrap();
@@ -55,22 +55,18 @@ fn main() {
         .collect();
 }
 
-fn create_material_graph<'a, I>(
-    handicrafts: I,
-) -> (Vec<HandicraftComponent<'a>>, HandicraftGraph<'a>)
+fn create_material_graph<'a, I>(handicrafts: I) -> (Vec<HandicraftComponent>, HandicraftGraph)
 where
     I: Iterator<Item = &'a Handicraft>,
 {
     let mut graph = GraphMap::new();
     let recipe_nodes: Vec<_> = handicrafts
         .map(|item| {
-            let recipe_node = graph.add_node(HandicraftComponent::Handicraft(HandicraftName(
-                item.name.as_str(),
-            )));
+            let recipe_node = graph.add_node(HandicraftComponent::Handicraft(item.name));
             for mat in &item.materials {
                 graph.add_edge(
                     recipe_node,
-                    HandicraftComponent::Material(MaterialName(mat.0.as_str())),
+                    HandicraftComponent::Material(*mat.0),
                     u8::default(),
                 );
             }
@@ -123,7 +119,7 @@ fn input_product_pop_supply(stdin: &mut io::Stdin, handicraft: Handicraft) -> Ha
 fn remove_unmakeable_recipes<'a>(
     recipe_nodes: &'a mut HashSet<HandicraftName>,
     rare_item_counts: Vec<RareItemCount>,
-    handicraft_graph: &mut HandicraftGraph<'a>,
+    handicraft_graph: &mut HandicraftGraph,
 ) {
     // must finish immutable borrow before removing nodes
     let unusable_recipes: HashSet<_> = rare_item_counts
@@ -132,21 +128,20 @@ fn remove_unmakeable_recipes<'a>(
         .flat_map(|item| {
             handicraft_graph
                 .neighbors_directed(
-                    HandicraftComponent::Material(MaterialName(item.name().to_string().as_str())),
+                    HandicraftComponent::Material(*item.name()),
                     petgraph::Direction::Incoming,
                 )
                 .collect::<HashSet<_>>()
         })
         .collect();
     for recipe in unusable_recipes {
-        let handicraft_name = match recipe {
-            HandicraftComponent::Handicraft(h) => h,
-            //todo
-            HandicraftComponent::Material(m) => panic!(),
-        };
+        let handicraft_name = recipe.try_into().expect(&format!(
+            "Rare item node was connected to another material ({:?})",
+            recipe
+        ));
         let node = recipe_nodes.take(&handicraft_name).expect(&format!(
             "Rare item node was connected to non-existant recipe ({})",
-            handicraft_name.0
+            handicraft_name
         ));
         handicraft_graph.remove_node(HandicraftComponent::Handicraft(node));
     }
@@ -156,7 +151,7 @@ fn find_agendas<'a>(
     handicraft_pop_supply: Vec<HandicraftPopSupply>,
     rare_item_counts: Vec<RareItemCount>,
     mut recipe_nodes: HashSet<HandicraftName>,
-    mut handicraft_graph: HandicraftGraph<'a>,
+    mut handicraft_graph: HandicraftGraph,
     handicraft_pricing_info: HashMap<HandicraftName, HandicraftPricingInfo>,
 ) -> Vec<Agenda> {
     remove_unmakeable_recipes(&mut recipe_nodes, rare_item_counts, &mut handicraft_graph);
@@ -182,17 +177,17 @@ fn find_agendas<'a>(
     todo!();
 }
 
-enum AgendaGeneratorResult<'a> {
-    Tail(Vec<HandicraftName<'a>>),
-    Intermediate(Box<Vec<AgendaGeneratorResult<'a>>>),
+enum AgendaGeneratorResult {
+    Tail(Vec<HandicraftName>),
+    Intermediate(Box<Vec<AgendaGeneratorResult>>),
 }
 
 fn generate_agendas<'a>(
-    handicraft_graph: &HandicraftGraph<'a>,
+    handicraft_graph: &HandicraftGraph,
     handicraft_pricing_info: &HashMap<HandicraftName, HandicraftPricingInfo>,
     agenda: Vec<HandicraftName>,
     elapsed: usize,
-) -> AgendaGeneratorResult<'a> {
+) -> AgendaGeneratorResult {
     // can't fit anything else in agenda
     if elapsed >= 21 {
         AgendaGeneratorResult::Tail(agenda)

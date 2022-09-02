@@ -1,12 +1,14 @@
 use std::{collections::HashMap, str::FromStr};
 
 use serde::Deserialize;
+use strum_macros::Display;
 use thiserror::Error;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Category(pub String);
 
-#[derive(Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
+#[derive(Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Display)]
+#[strum(serialize_all = "title_case")]
 pub enum HandicraftName {
     IsleworksPotion,
     IsleworksFiresand,
@@ -60,6 +62,8 @@ pub enum HandicraftName {
     IsleworksCrook,
 }
 
+#[derive(Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Display)]
+#[strum(serialize_all = "title_case")]
 pub enum MaterialName {
     IslandAlyssum,
     IslandApple,
@@ -174,12 +178,12 @@ impl TryFrom<HandicraftComponent> for MaterialName {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Handicraft {
-    pub name: String,
+    pub name: HandicraftName,
     pub time: usize,
     pub quantity: usize,
     pub value: usize,
     pub category: Vec<Category>,
-    pub materials: HashMap<String, usize>,
+    pub materials: HashMap<MaterialName, usize>,
 }
 
 impl Handicraft {
@@ -287,12 +291,12 @@ pub struct HandicraftPopSupply {
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct RareItem {
-    pub name: String,
+    pub name: MaterialName,
 }
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct RareItemWithArea {
-    pub name: String,
+    pub name: MaterialName,
     pub area: String,
 }
 
@@ -316,7 +320,7 @@ pub enum RareItemVariant {
 }
 
 impl RareItemVariant {
-    pub fn name(&self) -> &str {
+    pub fn name(&self) -> &MaterialName {
         match self {
             RareItemVariant::RareItem(i) => &i.name,
             RareItemVariant::WithArea(i) => &i.name,
@@ -331,7 +335,7 @@ pub struct RareItemCount {
 }
 
 impl RareItemCount {
-    pub fn name(&self) -> &str {
+    pub fn name(&self) -> &MaterialName {
         self.rare.name()
     }
 }
