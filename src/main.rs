@@ -72,6 +72,7 @@ fn main() {
     println!("Outputting top 5 producing agendas");
 
     for agenda in agendas {
+        print!("[{}]", agenda.total_value);
         let mut it = agenda
             .handicrafts
             .iter()
