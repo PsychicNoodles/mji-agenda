@@ -282,26 +282,29 @@ fn generate_agendas(
             .flat_map(|neighbor| {
                 handicraft_graph.neighbors_directed(neighbor, petgraph::Direction::Incoming)
             })
-            .filter(|recipe| {
-                current
-                    != &recipe.try_into().unwrap_or_else(|_| {
-                        panic!("Material pointed towards material ({:?})", recipe)
-                    })
-            });
+            .map(|recipe| -> HandicraftName {
+                recipe
+                    .try_into()
+                    .unwrap_or_else(|_| panic!("Material pointed towards material ({:?})", recipe))
+            })
+            .filter(|recipe| current != recipe)
+            .map(|recipe| {
+                (
+                    recipe,
+                    handicraft_pricing_info.get(&recipe).unwrap_or_else(|| {
+                        panic!("Could not find pricing info for handicraft {:?}", recipe)
+                    }),
+                )
+            })
+            .filter(|(_, pricing_info)| pricing_info.time + elapsed <= TIME_IN_CYCLE);
         AgendaGeneratorResult::Intermediate(
             candidates
-                .map(|c| {
+                .map(|(recipe, pricing_info)| {
                     let mut new_agenda = agenda.clone();
-                    let new_handicraft: HandicraftName = c
-                        .try_into()
-                        .unwrap_or_else(|_| panic!("Tried adding material to agenda ({:?})", c));
-                    let elapsed = elapsed
-                        + handicraft_pricing_info
-                            .get(&new_handicraft)
-                            .unwrap_or_else(|| {
-                                panic!("Could not find pricing info for handicraft {:?}", c)
-                            })
-                            .time;
+                    let new_handicraft: HandicraftName = recipe.try_into().unwrap_or_else(|_| {
+                        panic!("Tried adding material to agenda ({:?})", recipe)
+                    });
+                    let elapsed = elapsed + pricing_info.time;
                     new_agenda.push(new_handicraft);
                     generate_agendas(
                         handicraft_graph,
