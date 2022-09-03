@@ -1,13 +1,15 @@
 use std::{collections::HashMap, str::FromStr};
 
 use serde::Deserialize;
-use strum_macros::{Display, EnumString};
+use strum_macros;
 use thiserror::Error;
 
 #[derive(Deserialize, Debug, Clone)]
 pub struct Category(pub String);
 
-#[derive(Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Display)]
+#[derive(
+    Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, strum_macros::Display,
+)]
 #[strum(serialize_all = "title_case")]
 pub enum HandicraftName {
     IsleworksPotion,
@@ -63,7 +65,17 @@ pub enum HandicraftName {
 }
 
 #[derive(
-    Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Display, EnumString,
+    Deserialize,
+    Debug,
+    Clone,
+    Copy,
+    PartialOrd,
+    Ord,
+    PartialEq,
+    Eq,
+    Hash,
+    strum_macros::Display,
+    strum_macros::EnumString,
 )]
 #[strum(serialize_all = "title_case")]
 pub enum MaterialName {
@@ -99,6 +111,9 @@ pub enum MaterialName {
     IslandStone,
     IslandSugarcane,
     IslandTinsand,
+    IslandIronOre,
+    IslandQuartz,
+    IslandLeucogranite,
     IslandTomato,
     IslandVine,
     IslandWheat,

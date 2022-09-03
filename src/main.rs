@@ -3,7 +3,7 @@ mod types;
 use std::{
     collections::{BinaryHeap, HashMap, HashSet},
     fs,
-    io::{self, Read},
+    io::{self, Write},
     iter, mem,
 };
 
@@ -31,15 +31,10 @@ fn main() {
     let mut input_buf = String::new();
     let rare_item_counts: Vec<_> = data
         .rare
-        .produce
+        .material
         .into_iter()
-        .map(RareItemVariant::RareItem)
-        .chain(
-            data.rare
-                .material
-                .into_iter()
-                .map(RareItemVariant::WithArea),
-        )
+        .map(RareItemVariant::WithArea)
+        .chain(data.rare.produce.into_iter().map(RareItemVariant::RareItem))
         .chain(
             data.rare
                 .leavings
@@ -54,7 +49,12 @@ fn main() {
     let handicraft_pop_supply = data
         .handicrafts
         .iter()
-        .map(|item| (item.name, input_product_pop_supply(&mut stdin, item)))
+        .map(|item| {
+            (
+                item.name,
+                input_product_pop_supply(&mut stdin, &mut input_buf, item),
+            )
+        })
         .collect();
     println!("handicraft_pop_supply: {:?}", handicraft_pop_supply);
 
@@ -114,33 +114,37 @@ fn input_rare_item_count(
     rare: RareItemVariant,
 ) -> RareItemCount {
     print!("{}: ", rare.name());
+    io::stdout().flush().unwrap();
     stdin
         .read_line(input_buf)
         .expect("Tried reading user input for rare item count");
-    let count = input_buf.parse().expect("Must be an unsigned integer");
-    println!();
+    let count = input_buf
+        .trim()
+        .parse()
+        .expect("Must be an unsigned integer");
     input_buf.clear();
     RareItemCount { rare, count }
 }
 
-fn input_product_pop_supply(stdin: &mut io::Stdin, handicraft: &Handicraft) -> PopSupply {
-    let mut input_buf = [0; 1];
+fn input_product_pop_supply(
+    stdin: &mut io::Stdin,
+    input_buf: &mut String,
+    handicraft: &Handicraft,
+) -> PopSupply {
     print!("{} popularity: ", handicraft.name);
+    io::stdout().flush().unwrap();
     stdin
-        .read_exact(&mut input_buf)
+        .read_line(input_buf)
         .expect("Tried reading user input for product popularity");
-    let popularity = String::from_utf8_lossy(&input_buf)
-        .parse()
-        .expect("Must be a valid character");
-    println!();
+    let popularity = input_buf.trim().parse().expect("Must be a valid character");
+    input_buf.clear();
     print!("{} supply: ", handicraft.name);
+    io::stdout().flush().unwrap();
     stdin
-        .read_exact(&mut input_buf)
+        .read_line(input_buf)
         .expect("Tried reading user input for product supply");
-    let supply = String::from_utf8_lossy(&input_buf)
-        .parse()
-        .expect("Must be a valid character");
-    println!();
+    let supply = input_buf.trim().parse().expect("Must be a valid character");
+    input_buf.clear();
     PopSupply { popularity, supply }
 }
 
@@ -272,17 +276,17 @@ fn generate_agendas(
         AgendaGeneratorResult::Tail(agenda)
     } else {
         let current = agenda.last().expect("Agenda is empty");
-        let candidates =
-            handicraft_graph
-                .neighbors(HandicraftComponent::Handicraft(*current))
-                .flat_map(|neighbor| {
-                    handicraft_graph.neighbors_directed(neighbor, petgraph::Direction::Incoming)
-                })
-                .filter(|recipe| {
-                    !agenda.contains(&recipe.try_into().unwrap_or_else(|_| {
+        let candidates = handicraft_graph
+            .neighbors(HandicraftComponent::Handicraft(*current))
+            .flat_map(|neighbor| {
+                handicraft_graph.neighbors_directed(neighbor, petgraph::Direction::Incoming)
+            })
+            .filter(|recipe| {
+                current
+                    != &recipe.try_into().unwrap_or_else(|_| {
                         panic!("Material pointed towards material ({:?})", recipe)
-                    }))
-                });
+                    })
+            });
         AgendaGeneratorResult::Intermediate(
             candidates
                 .map(|c| {
