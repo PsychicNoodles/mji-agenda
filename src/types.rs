@@ -1,11 +1,8 @@
 use std::{collections::HashMap, str::FromStr};
 
+use derive_more::Unwrap;
 use serde::Deserialize;
-use strum_macros;
 use thiserror::Error;
-
-#[derive(Deserialize, Debug, Clone)]
-pub struct Category(pub String);
 
 #[derive(
     Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, strum_macros::Display,
@@ -131,66 +128,40 @@ pub enum MaterialName {
     SanctuaryHorn,
     SanctuaryMilk,
 }
+#[derive(
+    Deserialize, Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, strum_macros::Display,
+)]
+#[strum(serialize_all = "title_case")]
+pub enum CategoryName {
+    Accessories,
+    Arms,
+    Attire,
+    Concoctions,
+    Confections,
+    CreatureCreations,
+    Foodstuffs,
+    Furnishings,
+    Ingredients,
+    MarineMerchandise,
+    Metalworks,
+    PreservedFood,
+    Sundries,
+    Textiles,
+    UnburiedTreasures,
+    Woodworks,
+}
 
 // for the graph
-#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash)]
-pub enum HandicraftComponent {
+#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Unwrap)]
+pub enum MaterialGraphNode {
     Handicraft(HandicraftName),
     Material(MaterialName),
 }
 
-// todo make this more succinct
-
-#[derive(Debug, Error)]
-#[error("Expected handicraft but was not")]
-pub struct HandicraftComponentNotHandicraft;
-
-impl TryFrom<&HandicraftComponent> for HandicraftName {
-    type Error = HandicraftComponentNotHandicraft;
-
-    fn try_from(value: &HandicraftComponent) -> Result<Self, Self::Error> {
-        match value {
-            HandicraftComponent::Handicraft(h) => Ok(*h),
-            HandicraftComponent::Material(_) => Err(Self::Error {}),
-        }
-    }
-}
-
-impl TryFrom<&HandicraftComponent> for MaterialName {
-    type Error = HandicraftComponentNotMaterial;
-
-    fn try_from(value: &HandicraftComponent) -> Result<Self, Self::Error> {
-        match value {
-            HandicraftComponent::Handicraft(_) => Err(Self::Error {}),
-            HandicraftComponent::Material(m) => Ok(*m),
-        }
-    }
-}
-
-impl TryFrom<HandicraftComponent> for HandicraftName {
-    type Error = HandicraftComponentNotHandicraft;
-
-    fn try_from(value: HandicraftComponent) -> Result<Self, Self::Error> {
-        match value {
-            HandicraftComponent::Handicraft(h) => Ok(h),
-            HandicraftComponent::Material(_) => Err(Self::Error {}),
-        }
-    }
-}
-
-#[derive(Debug, Error)]
-#[error("Expected material but was not")]
-pub struct HandicraftComponentNotMaterial;
-
-impl TryFrom<HandicraftComponent> for MaterialName {
-    type Error = HandicraftComponentNotMaterial;
-
-    fn try_from(value: HandicraftComponent) -> Result<Self, Self::Error> {
-        match value {
-            HandicraftComponent::Handicraft(_) => Err(Self::Error {}),
-            HandicraftComponent::Material(m) => Ok(m),
-        }
-    }
+#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Unwrap)]
+pub enum HandicraftGraphNode {
+    Handicraft(HandicraftName),
+    Category(CategoryName),
 }
 
 #[derive(Deserialize, Debug, Clone)]
@@ -199,7 +170,7 @@ pub struct Handicraft {
     pub time: usize,
     pub quantity: usize,
     pub value: usize,
-    pub category: Vec<Category>,
+    pub category: Vec<CategoryName>,
     pub materials: HashMap<MaterialName, usize>,
 }
 
@@ -305,12 +276,12 @@ pub struct PopSupply {
     pub supply: Supply,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct RareItem {
     pub name: MaterialName,
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Debug, Clone, PartialEq, Eq, Hash)]
 pub struct RareItemWithArea {
     pub name: MaterialName,
     pub area: String,
@@ -329,7 +300,7 @@ pub struct DataFile {
     pub rare: RareItems,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum RareItemVariant {
     RareItem(RareItem),
     WithArea(RareItemWithArea),
@@ -344,7 +315,7 @@ impl RareItemVariant {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct RareItemCount {
     pub rare: RareItemVariant,
     pub count: usize,

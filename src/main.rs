@@ -10,20 +10,23 @@ use std::{
 use cached::proc_macro::cached;
 use petgraph::{prelude::GraphMap, Directed};
 use types::{
-    Agenda, DataFile, Handicraft, HandicraftComponent, HandicraftName, HandicraftPricingInfo,
-    PopSupply, RareItemCount, RareItemVariant,
+    Agenda, DataFile, Handicraft, HandicraftGraphNode, HandicraftName, HandicraftPricingInfo,
+    MaterialGraphNode, PopSupply, RareItemCount, RareItemVariant,
 };
 
 const TIME_IN_CYCLE: usize = 24;
 const MIN_PRODUCT_TIME: usize = 4;
 
-type HandicraftGraph = GraphMap<HandicraftComponent, u8, Directed>;
+type MaterialGraph = GraphMap<MaterialGraphNode, u8, Directed>;
+type HandicraftGraph = GraphMap<HandicraftGraphNode, u8, Directed>;
 
 fn main() {
     let raw = fs::read_to_string("handicrafts.toml").unwrap();
     let data: DataFile = raw.parse::<toml::Value>().unwrap().try_into().unwrap();
 
-    let (recipe_nodes, handicraft_graph) = create_material_graph(data.handicrafts.iter());
+    // useful for mapping material connections, less useful for making agendas with efficiency bonus
+    // let (recipe_nodes, handicraft_graph) = create_material_graph(data.handicrafts.iter());
+    let (recipe_nodes, handicraft_graph) = create_handicraft_graph(data.handicrafts.iter());
 
     println!("Input amount of rare items in Isleventory");
 
@@ -59,6 +62,7 @@ fn main() {
     println!("handicraft_pop_supply: {:?}", handicraft_pop_supply);
 
     let agendas = find_agendas(
+        &data.handicrafts,
         handicraft_pop_supply,
         rare_item_counts,
         recipe_nodes,
@@ -88,7 +92,7 @@ fn main() {
     }
 }
 
-fn create_material_graph<'a, I>(handicrafts: I) -> (HashSet<HandicraftName>, HandicraftGraph)
+fn create_material_graph<'a, I>(handicrafts: I) -> (HashSet<HandicraftName>, MaterialGraph)
 where
     I: Iterator<Item = &'a Handicraft>,
 {
@@ -96,16 +100,38 @@ where
     let recipe_nodes = handicrafts
         .map(|item| {
             for mat in &item.materials {
-                let material_node = graph.add_node(HandicraftComponent::Handicraft(item.name));
+                let recipe_node = graph.add_node(MaterialGraphNode::Handicraft(item.name));
                 graph.add_edge(
-                    material_node,
-                    HandicraftComponent::Material(*mat.0),
+                    recipe_node,
+                    MaterialGraphNode::Material(*mat.0),
                     u8::default(),
                 );
             }
             item.name
         })
         .collect();
+    (recipe_nodes, graph)
+}
+
+fn create_handicraft_graph<'a, I>(handicrafts: I) -> (HashSet<HandicraftName>, HandicraftGraph)
+where
+    I: Iterator<Item = &'a Handicraft>,
+{
+    let mut graph = GraphMap::new();
+    let recipe_nodes = handicrafts
+        .map(|item| {
+            for cat in &item.category {
+                let recipe_node = graph.add_node(HandicraftGraphNode::Handicraft(item.name));
+                graph.add_edge(
+                    recipe_node,
+                    HandicraftGraphNode::Category(*cat),
+                    u8::default(),
+                );
+            }
+            item.name
+        })
+        .collect();
+
     (recipe_nodes, graph)
 }
 
@@ -150,48 +176,43 @@ fn input_product_pop_supply(
 }
 
 fn remove_unmakeable_recipes(
+    handicrafts: &Vec<Handicraft>,
     recipe_nodes: &mut HashSet<HandicraftName>,
     rare_item_counts: Vec<RareItemCount>,
     handicraft_graph: &mut HandicraftGraph,
 ) {
-    // must finish immutable borrow before removing nodes
-    let unusable_recipes: HashSet<_> = rare_item_counts
+    let unusable_items: HashSet<_> = rare_item_counts
         .into_iter()
         .filter(|item| item.count == 0)
-        .flat_map(|item| {
-            handicraft_graph
-                .neighbors_directed(
-                    HandicraftComponent::Material(*item.name()),
-                    petgraph::Direction::Incoming,
-                )
-                .collect::<HashSet<_>>()
-        })
+        .map(|item| *item.name())
         .collect();
-    for recipe in unusable_recipes {
-        let handicraft_name = recipe.try_into().unwrap_or_else(|_| {
-            panic!(
-                "Rare item node was connected to another material ({:?})",
-                recipe
-            )
-        });
-        let node = recipe_nodes.take(&handicraft_name).unwrap_or_else(|| {
-            panic!(
-                "Rare item node was connected to non-existant recipe ({})",
-                handicraft_name
-            )
-        });
-        handicraft_graph.remove_node(HandicraftComponent::Handicraft(node));
+    for h in handicrafts {
+        if h.materials.keys().any(|mat| unusable_items.contains(mat)) {
+            let node = recipe_nodes.take(&h.name).unwrap_or_else(|| {
+                panic!(
+                    "Rare item node was connected to non-existant recipe ({})",
+                    h.name
+                )
+            });
+            handicraft_graph.remove_node(HandicraftGraphNode::Handicraft(node));
+        }
     }
 }
 
 fn find_agendas(
+    handicrafts: &Vec<Handicraft>,
     handicraft_pop_supply: HashMap<HandicraftName, PopSupply>,
     rare_item_counts: Vec<RareItemCount>,
     mut recipe_nodes: HashSet<HandicraftName>,
     mut handicraft_graph: HandicraftGraph,
     handicraft_pricing_info: HashMap<HandicraftName, HandicraftPricingInfo>,
 ) -> BinaryHeap<Agenda> {
-    remove_unmakeable_recipes(&mut recipe_nodes, rare_item_counts, &mut handicraft_graph);
+    remove_unmakeable_recipes(
+        handicrafts,
+        &mut recipe_nodes,
+        rare_item_counts,
+        &mut handicraft_graph,
+    );
 
     recipe_nodes
         .iter()
@@ -278,15 +299,11 @@ fn generate_agendas(
     } else {
         let current = agenda.last().expect("Agenda is empty");
         let candidates = handicraft_graph
-            .neighbors(HandicraftComponent::Handicraft(*current))
-            .flat_map(|neighbor| {
-                handicraft_graph.neighbors_directed(neighbor, petgraph::Direction::Incoming)
+            .neighbors(HandicraftGraphNode::Handicraft(*current))
+            .flat_map(|category| {
+                handicraft_graph.neighbors_directed(category, petgraph::Direction::Incoming)
             })
-            .map(|recipe| -> HandicraftName {
-                recipe
-                    .try_into()
-                    .unwrap_or_else(|_| panic!("Material pointed towards material ({:?})", recipe))
-            })
+            .map(|recipe| recipe.unwrap_handicraft())
             .filter(|recipe| current != recipe)
             .map(|recipe| {
                 (
@@ -301,11 +318,8 @@ fn generate_agendas(
             candidates
                 .map(|(recipe, pricing_info)| {
                     let mut new_agenda = agenda.clone();
-                    let new_handicraft: HandicraftName = recipe.try_into().unwrap_or_else(|_| {
-                        panic!("Tried adding material to agenda ({:?})", recipe)
-                    });
                     let elapsed = elapsed + pricing_info.time;
-                    new_agenda.push(new_handicraft);
+                    new_agenda.push(recipe);
                     generate_agendas(
                         handicraft_graph,
                         handicraft_pricing_info,

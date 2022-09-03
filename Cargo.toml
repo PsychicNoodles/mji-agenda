@@ -14,3 +14,4 @@ petgraph = "0.6"
 cached = "0.38"
 strum = { version = "0.24", features = ["derive"] }
 strum_macros = "0.24"
+derive_more = "0.99"
