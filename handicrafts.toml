@@ -374,10 +374,28 @@ name = "IslandPopoto"
 name = "IslandCabbage"
 
 [[rare.produce]]
+name = "Isleberry"
+
+[[rare.produce]]
 name = "IslandPumpkin"
 
 [[rare.produce]]
+name = "IslandOnion"
+
+[[rare.produce]]
+name = "IslandTomato"
+
+[[rare.produce]]
+name = "IslandWheat"
+
+[[rare.produce]]
+name = "IslandCorn"
+
+[[rare.produce]]
 name = "IslandParsnip"
+
+[[rare.produce]]
+name = "IslandRadish"
 
 [[rare.material]]
 name = "IslandAlyssum"
