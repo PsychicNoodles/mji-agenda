@@ -21,8 +21,13 @@ type MaterialGraph = GraphMap<MaterialGraphNode, u8, Directed>;
 type HandicraftGraph = GraphMap<HandicraftGraphNode, u8, Directed>;
 
 fn main() {
-    let raw = fs::read_to_string("handicrafts.toml").unwrap();
-    let data: DataFile = raw.parse::<toml::Value>().unwrap().try_into().unwrap();
+    let raw = include_bytes!("handicrafts.toml");
+    // let raw = fs::read_to_string("src/handicrafts.toml").unwrap();
+    let data: DataFile = String::from_utf8_lossy(raw)
+        .parse::<toml::Value>()
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // useful for mapping material connections, less useful for making agendas with efficiency bonus
     // let (recipe_nodes, handicraft_graph) = create_material_graph(data.handicrafts.iter());
