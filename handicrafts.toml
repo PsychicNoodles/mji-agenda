@@ -366,6 +366,38 @@ value = 108
 category = ["Furnishings", "CreatureCreations"]
 materials = { SanctuaryFleece = 3, IslandCottonBoll = 2, IslandHemp = 1 }
 
+[[handicrafts]]
+name = "IsleworksGardenScythe"
+time = 6
+quantity = 1
+value = 108
+category = ["Sundries", "Metalworks"]
+materials = { SanctuaryClaw = 3, IslandIronOre = 2, IslandPalmLog = 1 }
+
+[[handicrafts]]
+name = "IsleworksBed"
+time = 8
+quantity = 1
+value = 144
+category = ["Furnishings", "Textiles"]
+materials = { SanctuaryFur = 4, IslandCottonBoll = 2, IslandLog = 2 }
+
+[[handicrafts]]
+name = "IsleworksScaleFingers"
+time = 8
+quantity = 1
+value = 144
+category = ["Attire", "CreatureCreations"]
+materials = { SanctuaryCarapace = 4, IslandIronOre = 2, IslandCottonBoll = 2 }
+
+[[handicrafts]]
+name = "IsleworksCrook"
+time = 8
+quantity = 1
+value = 144
+category = ["Arms", "Woodworks"]
+materials = { SanctuaryFang = 4, IslandQuartz = 2, IslandLog = 2 }
+
 
 [[rare.produce]]
 name = "IslandPopoto"
