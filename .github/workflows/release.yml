@@ -60,16 +60,16 @@ jobs:
 
       - name: Strip release binary (linux and macos)
         if: matrix.build == 'x86_64-linux' || endsWith(matrix.build, 'macos')
-        run: strip "target/${{ matrix.target }}/release/${{ BINARY_NAME }}"
+        run: strip "target/${{ matrix.target }}/release/$BINARY_NAME"
 
       - name: Build archive
         shell: bash
         run: |
           mkdir -p dist
           if [ "${{ matrix.os }}" = "windows-2019" ]; then
-            cp "target/${{ matrix.target }}/release/${{ BINARY_NAME }}.exe" "dist/"
+            cp "target/${{ matrix.target }}/release/$BINARY_NAME.exe" "dist/"
           else
-            cp "target/${{ matrix.target }}/release/${{ BINARY_NAME }}" "dist/"
+            cp "target/${{ matrix.target }}/release/$BINARY_NAME" "dist/"
           fi
 
       - uses: actions/upload-artifact@v3
@@ -107,18 +107,18 @@ jobs:
               if [[ $platform =~ "windows" ]]; then
                   exe=".exe"
               fi
-              pkgname=${{ BINARY_NAME }}-$TAG-$platform
+              pkgname=$BINARY_NAME-$TAG-$platform
               mkdir $pkgname
               cp $source/LICENSE $source/README.md $pkgname
-              mv bins-$platform/${{ BINARY_NAME }}$exe $pkgname
-              chmod +x $pkgname/${{ BINARY_NAME }}$exe
+              mv bins-$platform/$BINARY_NAME$exe $pkgname
+              chmod +x $pkgname/$BINARY_NAME$exe
               if [ "$exe" = "" ]; then
                   tar cJf dist/$pkgname.tar.xz $pkgname
               else
                   7z a -r dist/$pkgname.zip $pkgname
               fi
           done
-          tar cJf dist/${{ BINARY_NAME }}-$TAG-source.tar.xz -C $source .
+          tar cJf dist/$BINARY_NAME-$TAG-source.tar.xz -C $source .
           mv dist $source/
 
       - name: Upload binaries to release
