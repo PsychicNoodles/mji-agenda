@@ -89,7 +89,7 @@ jobs:
 
       - name: Calculate tag name
         run: |
-          name=date -Idate
+          name=$(date -Idate)
           echo ::set-output name=val::$name
           echo TAG=$name >> $GITHUB_ENV
         id: tagname
