@@ -295,7 +295,7 @@ pub struct RareItems {
 }
 
 #[derive(Deserialize, Debug, Clone)]
-pub struct DataFile {
+pub struct WorkshopData {
     pub handicrafts: Vec<Handicraft>,
     pub rare: RareItems,
 }

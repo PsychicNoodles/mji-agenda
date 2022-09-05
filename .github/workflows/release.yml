@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
   
 env:
-  BINARY_NAME: island-sanctuary-workshop
+  BINARY_NAME: mji-agenda
 
 jobs:
   dist:
