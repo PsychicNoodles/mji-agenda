@@ -2,7 +2,6 @@ mod types;
 
 use std::{
     collections::{BinaryHeap, HashMap, HashSet},
-    fs,
     io::{self, Write},
     iter, mem,
 };
@@ -11,13 +10,13 @@ use cached::proc_macro::cached;
 use petgraph::{prelude::GraphMap, Directed};
 use types::{
     Agenda, DataFile, Handicraft, HandicraftGraphNode, HandicraftName, HandicraftPricingInfo,
-    MaterialGraphNode, PopSupply, RareItemCount, RareItemVariant,
+    PopSupply, RareItemCount, RareItemVariant,
 };
 
 const TIME_IN_CYCLE: usize = 24;
 const MIN_PRODUCT_TIME: usize = 4;
 
-type MaterialGraph = GraphMap<MaterialGraphNode, u8, Directed>;
+// type MaterialGraph = GraphMap<MaterialGraphNode, u8, Directed>;
 type HandicraftGraph = GraphMap<HandicraftGraphNode, u8, Directed>;
 
 fn main() {
@@ -97,26 +96,26 @@ fn main() {
     }
 }
 
-fn create_material_graph<'a, I>(handicrafts: I) -> (HashSet<HandicraftName>, MaterialGraph)
-where
-    I: Iterator<Item = &'a Handicraft>,
-{
-    let mut graph = GraphMap::new();
-    let recipe_nodes = handicrafts
-        .map(|item| {
-            for mat in &item.materials {
-                let recipe_node = graph.add_node(MaterialGraphNode::Handicraft(item.name));
-                graph.add_edge(
-                    recipe_node,
-                    MaterialGraphNode::Material(*mat.0),
-                    u8::default(),
-                );
-            }
-            item.name
-        })
-        .collect();
-    (recipe_nodes, graph)
-}
+// fn create_material_graph<'a, I>(handicrafts: I) -> (HashSet<HandicraftName>, MaterialGraph)
+// where
+//     I: Iterator<Item = &'a Handicraft>,
+// {
+//     let mut graph = GraphMap::new();
+//     let recipe_nodes = handicrafts
+//         .map(|item| {
+//             for mat in &item.materials {
+//                 let recipe_node = graph.add_node(MaterialGraphNode::Handicraft(item.name));
+//                 graph.add_edge(
+//                     recipe_node,
+//                     MaterialGraphNode::Material(*mat.0),
+//                     u8::default(),
+//                 );
+//             }
+//             item.name
+//         })
+//         .collect();
+//     (recipe_nodes, graph)
+// }
 
 fn create_handicraft_graph<'a, I>(handicrafts: I) -> (HashSet<HandicraftName>, HandicraftGraph)
 where

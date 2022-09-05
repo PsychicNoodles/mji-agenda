@@ -152,11 +152,11 @@ pub enum CategoryName {
 }
 
 // for the graph
-#[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Unwrap)]
-pub enum MaterialGraphNode {
-    Handicraft(HandicraftName),
-    Material(MaterialName),
-}
+// #[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Unwrap)]
+// pub enum MaterialGraphNode {
+//     Handicraft(HandicraftName),
+//     Material(MaterialName),
+// }
 
 #[derive(Debug, Clone, Copy, PartialOrd, Ord, PartialEq, Eq, Hash, Unwrap)]
 pub enum HandicraftGraphNode {
