@@ -300,6 +300,25 @@ pub struct WorkshopData {
     pub rare: RareItems,
 }
 
+#[derive(Debug, Error)]
+pub enum WorkshopDataReadError {
+    #[error("Could not parse handicrafts data as toml")]
+    Toml,
+    #[error("Malformed handicrafts data")]
+    Malformed,
+}
+
+impl WorkshopData {
+    pub fn try_default() -> Result<Self, WorkshopDataReadError> {
+        let raw = include_bytes!("handicrafts.toml");
+        String::from_utf8_lossy(raw)
+            .parse::<toml::Value>()
+            .map_err(|_| WorkshopDataReadError::Toml)?
+            .try_into()
+            .map_err(|_| WorkshopDataReadError::Malformed)
+    }
+}
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum RareItemVariant {
     RareItem(RareItem),
