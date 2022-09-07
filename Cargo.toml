@@ -9,7 +9,7 @@ serde = { version = "1", features = ["derive"] }
 anyhow = "1"
 thiserror = "1"
 petgraph = "0.6"
-cached = "0.38"
+memoize = "0.3"
 strum = { version = "0.24", features = ["derive"] }
 strum_macros = "0.24"
 derive_more = "0.99"

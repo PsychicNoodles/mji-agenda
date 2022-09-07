@@ -3,12 +3,12 @@ use std::{
     iter, mem,
 };
 
-use cached::proc_macro::cached;
-use petgraph::{prelude::GraphMap, Directed};
 use crate::types::{
     Agenda, Handicraft, HandicraftGraphNode, HandicraftName, HandicraftPricingInfo, PopSupply,
     RareItemCount,
 };
+use memoize::memoize;
+use petgraph::{prelude::GraphMap, Directed};
 
 const TIME_IN_CYCLE: usize = 24;
 const MIN_PRODUCT_TIME: usize = 4;
@@ -251,7 +251,7 @@ fn calc_agenda(
 
 // full pricing formula uses workshop level and groove, which is TODO
 // for now, just the basic formula
-#[cached()]
+#[memoize]
 fn calc_abs_pricing(
     efficiency_bonus: bool,
     pop_supply: PopSupply,
